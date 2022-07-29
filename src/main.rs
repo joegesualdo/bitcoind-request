@@ -9,12 +9,7 @@ use std::env;
 use crate::command::Blockhash;
 
 fn request(client: &Client, command: &str, params: Vec<Box<RawValue>>) -> Response {
-    let request = if params.is_empty() {
-        client.build_request(command, &[])
-    } else {
-        client.build_request(command, &params)
-    };
-
+    let request = client.build_request(command, &params);
     let error_message = format!("{}_failed", command);
     let response = client.send_request(request).expect(&error_message);
     response
@@ -175,7 +170,7 @@ fn main() {
     let blockhash = Blockhash(best_block_hash);
 
     let response = GetBlockCommand::new(blockhash).call(&client);
-    println!("{:#?}", response.tx.len());
+    println!("{:#?}", response);
 
     /*
     let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");

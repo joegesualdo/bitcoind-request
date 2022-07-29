@@ -3,7 +3,7 @@
 
 ☠️⚠️ Work In Progress ☠️⚠️
 
-## Run the example in main:
+## Run:
 ```
 BITCOIND_PASSWORD=<password> BITCOIND_USERNAME=<user_name> cargo run
 ```

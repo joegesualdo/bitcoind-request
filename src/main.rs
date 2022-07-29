@@ -8,9 +8,7 @@ use std::env;
 
 use crate::command::Blockhash;
 
-// Note: We've using Boxes inside our vector because we're requiring the called must convert their
-// paramters to as serde_json RawValue before.
-// Callers must convert their paramaters to a serde_json Raw value:
+// Note: Callers must convert their paramaters to a serde_json Raw value:
 //    let blockhash = "839832983298"
 //    let blockhash_arg_raw_value = to_raw_value(&blockhash).unwrap();
 //    let params = vec![blockhash_arg_raw_value]

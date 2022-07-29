@@ -163,6 +163,7 @@ getzmqnotifications
 
 use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
+use serde_json::value::{to_raw_value, RawValue};
 
 use crate::request;
 
@@ -197,7 +198,7 @@ impl CallableCommand for GetBestBlockHashCommand {
     fn call(&self, client: &Client) -> Self::Response {
         let blockhash_arg = &self.blockhash_hex_encoded.0;
         let command = "getbestblockhash";
-        let params: Vec<String> = vec![];
+        let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
         let response: GetBestBlockHashCommandResponse = r.result().unwrap();
         response
@@ -244,9 +245,15 @@ pub struct GetBlockCommandResponse {
     strippedsize: u64,
     size: u64,
     weight: u64,
-    tx: Vec<String>,
+    pub tx: Vec<String>,
 }
 
+// TODO: This will only work for GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation
+//       because the json response has a different structure it returns for each verbosity option.
+//       For example, GetBlockCommandVerbosity::BlockObjectWithTransactionInformation will return
+//       an array for 'tx' field with full transaction structure, instead of only hashes for the
+//       transaction. To accomplish this, we need to figure out how to have serde handle
+//       conditional responses and map them to appropriate structs.
 impl CallableCommand for GetBlockCommand {
     type Response = GetBlockCommandResponse;
     fn call(&self, client: &Client) -> Self::Response {
@@ -254,11 +261,13 @@ impl CallableCommand for GetBlockCommand {
             GetBlockCommandVerbosity::SerializedHexEncodedData => 0,
             GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation => 1,
             GetBlockCommandVerbosity::BlockObjectWithTransactionInformation => 2,
-        }
-        .to_string();
+        };
         let blockhash_arg = &self.blockhash.0;
+        let blockhash_arg_raw_value = to_raw_value(&blockhash_arg).unwrap();
+        let verbosity_arg_raw_value = to_raw_value(&verbosity_arg).unwrap();
         let command = "getblock";
-        let params = vec![blockhash_arg];
+        let params = vec![blockhash_arg_raw_value, verbosity_arg_raw_value];
+        println!("{:?}", params);
         let r = request(client, command, params);
         let response: GetBlockCommandResponse = r.result().unwrap();
         response

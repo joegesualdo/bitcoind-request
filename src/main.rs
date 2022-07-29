@@ -1,8 +1,25 @@
+mod command;
+use command::{BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand};
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
-use jsonrpc::Client;
+use jsonrpc::{arg, try_arg, Client, Request, Response};
 use serde::{Deserialize, Serialize};
-use serde_json::value::to_raw_value;
+use serde_json::value::{to_raw_value, RawValue};
 use std::env;
+
+use crate::command::Blockhash;
+
+fn request<T: Serialize>(client: &Client, command: &str, param: Option<T>) -> Response {
+    let result = to_raw_value(&param);
+    let value = result.unwrap();
+    let params = [value];
+    let request: Request = match param {
+        Some(_param) => client.build_request(command, &params),
+        None => client.build_request(command, &[]),
+    };
+    let error_message = format!("{}_failed", command);
+    let response = client.send_request(request).expect(&error_message);
+    response
+}
 
 type Hash = String;
 #[derive(Serialize, Deserialize, Debug)]
@@ -16,35 +33,36 @@ struct GetMiningInfoResponse {
 }
 
 fn get_mining_info(client: &Client) -> GetMiningInfoResponse {
-    let getmininginfo_request = client.build_request("getmininginfo", &[]);
-    let response = client
-        .send_request(getmininginfo_request)
-        .expect("send_request failed");
-    let getmininginfo_response: GetMiningInfoResponse = response.result().unwrap();
-    getmininginfo_response
+    let command = "getmininginfo";
+    let params: Option<()> = None;
+    let r = request(client, command, params);
+    let response: GetMiningInfoResponse = r.result().unwrap();
+    response
 }
 
 type GetBlockCountResponse = i64;
 
 fn get_block_count(client: &Client) -> GetBlockCountResponse {
-    let request = client.build_request("getmininginfo", &[]);
-    let getblockcount_request = client.build_request("getblockcount", &[]);
-    let response = client
-        .send_request(getblockcount_request)
-        .expect("send_request failed");
-    let getblockcount_response: GetBlockCountResponse = response.result().unwrap();
-    getblockcount_response
+    let command = "getblockcount";
+    let params: Option<()> = None;
+    let r = request(client, command, params);
+    let response: GetBlockCountResponse = r.result().unwrap();
+    response
 }
 
 type GetBlockHashResponse = Hash;
 fn get_block_hash(client: &Client, blockheight: &i64) -> GetBlockHashResponse {
-    let raw = &[to_raw_value(&blockheight).unwrap()];
-    let getblockhash_request = client.build_request("getblockhash", raw);
-    let response = client
-        .send_request(getblockhash_request)
-        .expect("send_request failed");
-    let getblockhash_response: GetBlockHashResponse = response.result().unwrap();
-    getblockhash_response
+    //let raw = &[to_raw_value(&blockheight).unwrap()];
+    //let getblockhash_request = client.build_request("getblockhash", raw);
+    //let response = client.send_request(getblockhash_request).expect("send_request failed");
+
+    let command = "getblockhash";
+    let r = request(client, command, Some(blockheight));
+    let response: GetBlockHashResponse = r.result().unwrap();
+    response
+
+    //let getblockhash_response: GetBlockHashResponse = response.result().unwrap();
+    //getblockhash_response
 }
 
 fn client(url: &str, user: &str, pass: &str) -> Result<Client, simple_http::Error> {
@@ -56,6 +74,7 @@ fn client(url: &str, user: &str, pass: &str) -> Result<Client, simple_http::Erro
     Ok(Client::with_transport(t))
 }
 
+/*
 #[derive(Serialize, Deserialize, Debug)]
 struct GetBlockResponse {
     hash: String,
@@ -80,24 +99,21 @@ struct GetBlockResponse {
     tx: Vec<String>,
 }
 fn get_block(client: &Client, hash: String) -> GetBlockResponse {
-    let raw = &[to_raw_value(&hash).unwrap()];
-    let getblock_request = client.build_request("getblock", raw);
-    let response = client
-        .send_request(getblock_request)
-        .expect("send_request failed");
-    let getblock_response: GetBlockResponse = response.result().unwrap();
-    getblock_response
+    let command = "getblock";
+    let params = Some(hash);
+    let r = request(client, command, params);
+    let response: GetBlockResponse = r.result().unwrap();
+    response
 }
+*/
 
 type GetRawTransactionRepsonse = Hash;
 fn get_raw_transaction(client: &Client, tx_hash: &Hash) -> GetRawTransactionRepsonse {
-    let raw = &[to_raw_value(&tx_hash).unwrap()];
-    let getrawtransaction_request = client.build_request("getrawtransaction", raw);
-    let response = client
-        .send_request(getrawtransaction_request)
-        .expect("send_request failed");
-    let getrawtransaction_response: GetRawTransactionRepsonse = response.result().unwrap();
-    getrawtransaction_response
+    let command = "getrawtransaction";
+    let params = Some(tx_hash);
+    let r = request(client, command, params);
+    let response: GetRawTransactionRepsonse = r.result().unwrap();
+    response
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -147,6 +163,21 @@ fn main() {
     let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");
     let username = env::var("BITCOIND_USERNAME").expect("BITCOIND_USERNAME env variable not set");
     let client = client("127.0.0.1:8332", &username, &password).expect("failed to create client");
+    let blockhash_hex_encoded = BlockhashHexEncoded(
+        "00000000000000000007d1712328c3b95adc170e3e04b2499c04a4ee2905f72e".to_string(),
+    );
+
+    let blockhash_response = GetBestBlockHashCommand::new(blockhash_hex_encoded).call(&client);
+    println!("{:?}", blockhash_response);
+
+    let blockhash = Blockhash(blockhash_response);
+
+    let response = GetBlockCommand::new(blockhash).call(&client);
+    println!("{:?}", response);
+    /*
+    let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");
+    let username = env::var("BITCOIND_USERNAME").expect("BITCOIND_USERNAME env variable not set");
+    let client = client("127.0.0.1:8332", &username, &password).expect("failed to create client");
     let blockcount = get_block_count(&client);
     println!("{:?}", blockcount);
     let mininginfo = get_mining_info(&client);
@@ -167,4 +198,5 @@ fn main() {
         count = count + 1;
         println!("{:?}: {:?}", count, total_coins);
     }
+    */
 }

@@ -8,14 +8,19 @@ use std::env;
 
 use crate::command::Blockhash;
 
-fn request<T: Serialize>(client: &Client, command: &str, param: Option<T>) -> Response {
-    let result = to_raw_value(&param);
-    let value = result.unwrap();
-    let params = [value];
-    let request: Request = match param {
-        Some(_param) => client.build_request(command, &params),
-        None => client.build_request(command, &[]),
+fn request<T: Serialize>(client: &Client, command: &str, params: Vec<T>) -> Response {
+    let mut p: Vec<Box<RawValue>> = vec![];
+    for pa in &params {
+        let result = to_raw_value(&pa);
+        let value = result.unwrap();
+        p.push(value)
+    }
+    let request = if p.is_empty() {
+        client.build_request(command, &[])
+    } else {
+        client.build_request(command, &p)
     };
+
     let error_message = format!("{}_failed", command);
     let response = client.send_request(request).expect(&error_message);
     response
@@ -34,7 +39,7 @@ struct GetMiningInfoResponse {
 
 fn get_mining_info(client: &Client) -> GetMiningInfoResponse {
     let command = "getmininginfo";
-    let params: Option<()> = None;
+    let params: Vec<String> = vec![];
     let r = request(client, command, params);
     let response: GetMiningInfoResponse = r.result().unwrap();
     response
@@ -44,7 +49,7 @@ type GetBlockCountResponse = i64;
 
 fn get_block_count(client: &Client) -> GetBlockCountResponse {
     let command = "getblockcount";
-    let params: Option<()> = None;
+    let params: Vec<String> = vec![];
     let r = request(client, command, params);
     let response: GetBlockCountResponse = r.result().unwrap();
     response
@@ -56,8 +61,9 @@ fn get_block_hash(client: &Client, blockheight: &i64) -> GetBlockHashResponse {
     //let getblockhash_request = client.build_request("getblockhash", raw);
     //let response = client.send_request(getblockhash_request).expect("send_request failed");
 
+    let params: Vec<&i64> = vec![blockheight];
     let command = "getblockhash";
-    let r = request(client, command, Some(blockheight));
+    let r = request(client, command, params);
     let response: GetBlockHashResponse = r.result().unwrap();
     response
 
@@ -110,7 +116,7 @@ fn get_block(client: &Client, hash: String) -> GetBlockResponse {
 type GetRawTransactionRepsonse = Hash;
 fn get_raw_transaction(client: &Client, tx_hash: &Hash) -> GetRawTransactionRepsonse {
     let command = "getrawtransaction";
-    let params = Some(tx_hash);
+    let params: Vec<String> = vec![tx_hash.to_owned()];
     let r = request(client, command, params);
     let response: GetRawTransactionRepsonse = r.result().unwrap();
     response
@@ -174,6 +180,7 @@ fn main() {
 
     let response = GetBlockCommand::new(blockhash).call(&client);
     println!("{:?}", response);
+
     /*
     let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");
     let username = env::var("BITCOIND_USERNAME").expect("BITCOIND_USERNAME env variable not set");

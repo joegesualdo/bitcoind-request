@@ -197,7 +197,7 @@ impl CallableCommand for GetBestBlockHashCommand {
     fn call(&self, client: &Client) -> Self::Response {
         let blockhash_arg = &self.blockhash_hex_encoded.0;
         let command = "getbestblockhash";
-        let params: Option<()> = None;
+        let params: Vec<String> = vec![];
         let r = request(client, command, params);
         let response: GetBestBlockHashCommandResponse = r.result().unwrap();
         response
@@ -254,10 +254,11 @@ impl CallableCommand for GetBlockCommand {
             GetBlockCommandVerbosity::SerializedHexEncodedData => 0,
             GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation => 1,
             GetBlockCommandVerbosity::BlockObjectWithTransactionInformation => 2,
-        };
+        }
+        .to_string();
         let blockhash_arg = &self.blockhash.0;
         let command = "getblock";
-        let params = Some(blockhash_arg);
+        let params = vec![blockhash_arg];
         let r = request(client, command, params);
         let response: GetBlockCommandResponse = r.result().unwrap();
         response

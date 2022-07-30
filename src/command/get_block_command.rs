@@ -4,6 +4,111 @@ use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Vin {
+    // TODO: Most vins don't have a coinbase key, so how can I make Vin types based on this?
+    coinbase: Option<String>,
+    // TODO: Why wouldn't a vin have this?
+    txinwitness: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct ScriptPubKey {
+    asm: String,
+    hex: String,
+    address: Option<String>,
+    // TODO: Can't use "type" as a key because it's a reserved word in Rust.
+    #[serde(rename = "type")]
+    type_: String,
+}
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+struct Vout {
+    value: f64,
+    n: i64,
+    script_pub_key: ScriptPubKey,
+}
+#[derive(Serialize, Deserialize, Debug)]
+struct DecodeRawTransactionResponse {
+    txid: String,
+    hash: String,
+    version: i64,
+    size: i64,
+    weight: i64,
+    locktime: i64,
+    vin: Vec<Vin>,
+    vout: Vec<Vout>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+enum TransactionResponse {
+    Raw(DecodeRawTransactionResponse),
+    Id(String),
+}
+
+// TODO: Imlement a Block struct, that has better types.
+//       For example, use Blockhash for 'hash' field.
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GetBlockWithTransactionInformationCommandResponse {
+    hash: String,
+    confirmations: u64,
+    height: u64,
+    version: u64,
+    version_hex: String,
+    merkleroot: String,
+    time: u64,
+    mediantime: u64,
+    nonce: u64,
+    bits: String,
+    difficulty: f64,
+    chainwork: String,
+    n_tx: u64,
+    previousblockhash: Option<String>,
+    // TODO: Why isn't this always there?
+    nextblockhash: Option<String>,
+    strippedsize: u64,
+    size: u64,
+    weight: u64,
+    tx: Vec<TransactionResponse>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GetBlockWithoutTransactionInformationCommandResponse {
+    hash: String,                      // "hex" (string) the block hash (same as provided)
+    confirmations: i64, // The number of confirmations, or -1 if the block is not on the main chain
+    size: u64,          // The block size
+    strippedsize: u64,  // The block size excluding witness data
+    weight: u64,        // The block weight as defined in BIP 141
+    height: u64,        // The block height or index
+    version: u64,       // (numeric) The block version
+    version_hex: String, // "hex" The block version formatted in hexadecimal
+    merkleroot: String, // "hex" The merkle root
+    tx: Vec<TransactionResponse>, // "hex" The transaction ids
+    time: u64,          // "unix epoch time" The block time expressed in UNIX epoch time
+    mediantime: u64,    // "unix epoch time" The median block time expressed in UNIX epoch time
+    nonce: u64,         // The nonce
+    bits: String,       // "hex" The bits
+    difficulty: f64,    // The difficulty
+    chainwork: String, // "hex" Expected number of hashes required to produce the chain up to this block (in hex)
+    n_tx: u64,         // The number of transactions in the block
+    previousblockhash: Option<String>, // The hash of the previous block
+    // TODO: Why isn't this always there?
+    nextblockhash: Option<String>, // The hash of the next block
+}
+
+type GetBlockAsSerializedHextEncodedDataCommandResponse = String;
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+pub enum GetBlockCommandResponse {
+    AsSerializedHextEncodedData(GetBlockAsSerializedHextEncodedDataCommandResponse),
+    WithoutTransactionInformation(GetBlockWithoutTransactionInformationCommandResponse),
+    WithTransactionInformation(GetBlockWithTransactionInformationCommandResponse),
+}
+
 enum GetBlockCommandVerbosity {
     SerializedHexEncodedData,                 // argument of 0
     BlockObjectWithoutTransactionInformation, // argument of 1
@@ -21,31 +126,6 @@ impl GetBlockCommand {
             verbosity: GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation,
         }
     }
-}
-// TODO: Imlement a Block struct, that has better types.
-//       For example, use Blockhash for 'hash' field.
-#[derive(Serialize, Deserialize, Debug)]
-pub struct GetBlockCommandResponse {
-    hash: String,
-    confirmations: u64,
-    height: u64,
-    version: u64,
-    versionHex: String,
-    merkleroot: String,
-    time: u64,
-    mediantime: u64,
-    nonce: u64,
-    bits: String,
-    difficulty: f64,
-    chainwork: String,
-    nTx: u64,
-    previousblockhash: Option<String>,
-    // TODO: Why isn't this always there?
-    nextblockhash: Option<String>,
-    strippedsize: u64,
-    size: u64,
-    weight: u64,
-    pub tx: Vec<String>,
 }
 
 // TODO: This will only work for GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation

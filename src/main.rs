@@ -1,3 +1,4 @@
+/*
 mod command;
 use command::{BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand};
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
@@ -7,17 +8,6 @@ use serde_json::value::{to_raw_value, RawValue};
 use std::env;
 
 use crate::command::Blockhash;
-
-// Note: Callers must convert their paramaters to a serde_json Raw value:
-//    let blockhash = "839832983298"
-//    let blockhash_arg_raw_value = to_raw_value(&blockhash).unwrap();
-//    let params = vec![blockhash_arg_raw_value]
-fn request(client: &Client, command: &str, params: Vec<Box<RawValue>>) -> Response {
-    let request = client.build_request(command, &params);
-    let error_message = format!("{}_failed", command);
-    let response = client.send_request(request).expect(&error_message);
-    response
-}
 
 type Hash = String;
 #[derive(Serialize, Deserialize, Debug)]
@@ -202,3 +192,6 @@ fn main() {
     }
     */
 }
+*/
+
+fn main() {}

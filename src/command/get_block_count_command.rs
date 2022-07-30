@@ -1,9 +1,8 @@
 use crate::command::request::request;
 use crate::command::CallableCommand;
-use crate::BlockhashHexEncoded;
 use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
-use serde_json::value::{to_raw_value, RawValue};
+use serde_json::value::RawValue;
 
 pub struct GetBlockCountCommand {}
 impl GetBlockCountCommand {
@@ -13,7 +12,7 @@ impl GetBlockCountCommand {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct GetBlockCountCommandResponse(u64);
+pub struct GetBlockCountCommandResponse(pub u64);
 
 impl CallableCommand for GetBlockCountCommand {
     type Response = GetBlockCountCommandResponse;

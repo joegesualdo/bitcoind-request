@@ -5,15 +5,15 @@ use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Vin {
+pub struct Vin {
     // TODO: Most vins don't have a coinbase key, so how can I make Vin types based on this?
-    coinbase: Option<String>,
+    pub coinbase: Option<String>,
     // TODO: Why wouldn't a vin have this?
     txinwitness: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct ScriptPubKey {
+pub struct ScriptPubKey {
     asm: String,
     hex: String,
     address: Option<String>,
@@ -23,26 +23,71 @@ struct ScriptPubKey {
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-struct Vout {
+pub struct Vout {
     value: f64,
     n: i64,
     script_pub_key: ScriptPubKey,
 }
 #[derive(Serialize, Deserialize, Debug)]
-struct DecodeRawTransactionResponse {
-    txid: String,
-    hash: String,
-    version: i64,
-    size: i64,
-    weight: i64,
-    locktime: i64,
-    vin: Vec<Vin>,
-    vout: Vec<Vout>,
+pub struct DecodeRawTransactionResponse {
+    /*
+         * {                           (json object)
+      "txid" : "hex",           (string) The transaction id
+      "hash" : "hex",           (string) The transaction hash (differs from txid for witness transactions)
+      "size" : n,               (numeric) The transaction size
+      "vsize" : n,              (numeric) The virtual transaction size (differs from size for witness transactions)
+      "weight" : n,             (numeric) The transaction's weight (between vsize*4 - 3 and vsize*4)
+      "version" : n,            (numeric) The version
+      "locktime" : xxx,         (numeric) The lock time
+      "vin" : [                 (json array)
+        {                       (json object)
+          "txid" : "hex",       (string) The transaction id
+          "vout" : n,           (numeric) The output number
+          "scriptSig" : {       (json object) The script
+            "asm" : "str",      (string) asm
+            "hex" : "hex"       (string) hex
+          },
+          "txinwitness" : [     (json array)
+            "hex",              (string) hex-encoded witness data (if any)
+            ...
+          ],
+          "sequence" : n        (numeric) The script sequence number
+        },
+        ...
+      ],
+      "vout" : [                (json array)
+        {                       (json object)
+          "value" : n,          (numeric) The value in BTC
+          "n" : n,              (numeric) index
+          "scriptPubKey" : {    (json object)
+            "asm" : "str",      (string) the asm
+            "hex" : "hex",      (string) the hex
+            "reqSigs" : n,      (numeric) The required sigs
+            "type" : "str",     (string) The type, eg 'pubkeyhash'
+            "addresses" : [     (json array)
+              "str",            (string) bitcoin address
+              ...
+            ]
+          }
+        },
+        ...
+      ]
+    }
+         */
+    txid: String, // "hex" The transaction id
+    hash: String, // "hex" The transaction hash (differs from txid for witness transactions)
+    size: u64,    // The transaction size
+    vsize: u64,   // The virtual transaction size (differs from size for witness transactions)
+    version: u64,
+    weight: u64,
+    locktime: u64,
+    pub vin: Vec<Vin>,
+    pub vout: Vec<Vout>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
-enum TransactionResponse {
+pub enum GetBlockCommandTransactionResponse {
     Raw(DecodeRawTransactionResponse),
     Id(String),
 }
@@ -57,26 +102,26 @@ pub enum GetBlockCommandResponse {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Block {
-    hash: String,                      // "hex" (string) the block hash (same as provided)
-    confirmations: i64, // The number of confirmations, or -1 if the block is not on the main chain
-    size: u64,          // The block size
-    strippedsize: u64,  // The block size excluding witness data
-    weight: u64,        // The block weight as defined in BIP 141
-    height: u64,        // The block height or index
-    version: u64,       // (numeric) The block version
-    version_hex: String, // "hex" The block version formatted in hexadecimal
-    merkleroot: String, // "hex" The merkle root
-    tx: Vec<TransactionResponse>, // "hex" The transaction ids
-    time: u64,          // "unix epoch time" The block time expressed in UNIX epoch time
-    mediantime: u64,    // "unix epoch time" The median block time expressed in UNIX epoch time
-    nonce: u64,         // The nonce
-    bits: String,       // "hex" The bits
-    difficulty: f64,    // The difficulty
-    chainwork: String, // "hex" Expected number of hashes required to produce the chain up to this block (in hex)
-    n_tx: u64,         // The number of transactions in the block
-    previousblockhash: Option<String>, // The hash of the previous block
+    pub hash: String,        // "hex" (string) the block hash (same as provided)
+    pub confirmations: i64, // The number of confirmations, or -1 if the block is not on the main chain
+    pub size: u64,          // The block size
+    pub strippedsize: u64,  // The block size excluding witness data
+    pub weight: u64,        // The block weight as defined in BIP 141
+    pub height: u64,        // The block height or index
+    pub version: u64,       // (numeric) The block version
+    pub version_hex: String, // "hex" The block version formatted in hexadecimal
+    pub merkleroot: String, // "hex" The merkle root
+    pub tx: Vec<GetBlockCommandTransactionResponse>, // "hex" The transaction ids
+    pub time: u64,          // "unix epoch time" The block time expressed in UNIX epoch time
+    pub mediantime: u64,    // "unix epoch time" The median block time expressed in UNIX epoch time
+    pub nonce: u64,         // The nonce
+    pub bits: String,       // "hex" The bits
+    pub difficulty: f64,    // The difficulty
+    pub chainwork: String, // "hex" Expected number of hashes required to produce the chain up to this block (in hex)
+    pub n_tx: u64,         // The number of transactions in the block
+    pub previousblockhash: Option<String>, // The hash of the previous block
     // TODO: Why isn't this always there?
-    nextblockhash: Option<String>, // The hash of the next block
+    pub nextblockhash: Option<String>, // The hash of the next block
 }
 
 type GetBlockAsSerializedHextEncodedDataCommandResponse = String;

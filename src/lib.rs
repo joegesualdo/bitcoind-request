@@ -1,7 +1,8 @@
 mod command;
 pub use command::{
-    CallableCommand, GetBestBlockHashCommand, GetBlockCommand, GetBlockCommandVerbosity,
-    GetBlockCountCommand,
+    CallableCommand, GetBestBlockHashCommand, GetBlockCommand, GetBlockCommandResponse,
+    GetBlockCommandTransactionResponse, GetBlockCommandVerbosity, GetBlockCountCommand,
+    GetBlockHashCommand,
 };
 #[derive(Debug)]
 pub struct BlockhashHexEncoded(pub String);

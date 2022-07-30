@@ -1,6 +1,7 @@
 use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
-    GetBlockCommandVerbosity, GetBlockCountCommand,
+    GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
+    GetBlockCountCommand, GetBlockHashCommand,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -34,4 +35,33 @@ fn main() {
 
     let block_count = GetBlockCountCommand::new().call(&client);
     println!("{:#?}", block_count);
+
+    let newest_block_hash_response = GetBlockHashCommand::new(block_count.0).call(&client);
+    println!("{:#?}", newest_block_hash_response);
+
+    let newest_block_hash = Blockhash(newest_block_hash_response.0);
+
+    let newest_block = GetBlockCommand::new(newest_block_hash)
+        .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+        .call(&client);
+    match newest_block {
+        GetBlockCommandResponse::Block(block) => {
+            for tx in block.tx {
+                match tx {
+                    GetBlockCommandTransactionResponse::Raw(transaction) => {
+                        for v in transaction.vin {
+                            if v.coinbase.is_some() {
+                                println!("vin: {:#?}", v);
+                            }
+                        }
+                    }
+                    GetBlockCommandTransactionResponse::Id(id) => {}
+                }
+            }
+            println!("hash: {:#?}", block.hash);
+            println!("size: {:#?}mb", block.size as f64 / 1000000.0);
+            println!("size: {:#?}mwu", block.weight as f64 / 1000000.0);
+        }
+        GetBlockCommandResponse::BlockHash(hash) => {}
+    }
 }

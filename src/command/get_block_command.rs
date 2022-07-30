@@ -47,36 +47,16 @@ enum TransactionResponse {
     Id(String),
 }
 
-// TODO: Imlement a Block struct, that has better types.
-//       For example, use Blockhash for 'hash' field.
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct GetBlockWithTransactionInformationCommandResponse {
-    hash: String,
-    confirmations: u64,
-    height: u64,
-    version: u64,
-    version_hex: String,
-    merkleroot: String,
-    time: u64,
-    mediantime: u64,
-    nonce: u64,
-    bits: String,
-    difficulty: f64,
-    chainwork: String,
-    n_tx: u64,
-    previousblockhash: Option<String>,
-    // TODO: Why isn't this always there?
-    nextblockhash: Option<String>,
-    strippedsize: u64,
-    size: u64,
-    weight: u64,
-    tx: Vec<TransactionResponse>,
+#[serde(untagged)]
+pub enum GetBlockCommandResponse {
+    BlockHash(String),
+    Block(Block),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct GetBlockWithoutTransactionInformationCommandResponse {
+pub struct Block {
     hash: String,                      // "hex" (string) the block hash (same as provided)
     confirmations: i64, // The number of confirmations, or -1 if the block is not on the main chain
     size: u64,          // The block size
@@ -101,15 +81,7 @@ pub struct GetBlockWithoutTransactionInformationCommandResponse {
 
 type GetBlockAsSerializedHextEncodedDataCommandResponse = String;
 
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-pub enum GetBlockCommandResponse {
-    AsSerializedHextEncodedData(GetBlockAsSerializedHextEncodedDataCommandResponse),
-    WithoutTransactionInformation(GetBlockWithoutTransactionInformationCommandResponse),
-    WithTransactionInformation(GetBlockWithTransactionInformationCommandResponse),
-}
-
-enum GetBlockCommandVerbosity {
+pub enum GetBlockCommandVerbosity {
     SerializedHexEncodedData,                 // argument of 0
     BlockObjectWithoutTransactionInformation, // argument of 1
     BlockObjectWithTransactionInformation,    // argument of 2
@@ -125,6 +97,10 @@ impl GetBlockCommand {
             blockhash,
             verbosity: GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation,
         }
+    }
+    pub fn verbosity(&mut self, verbosity: GetBlockCommandVerbosity) -> &Self {
+        self.verbosity = verbosity;
+        self
     }
 }
 

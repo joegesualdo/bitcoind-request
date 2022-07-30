@@ -1,5 +1,6 @@
 use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
+    GetBlockCommandVerbosity,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -10,9 +11,9 @@ fn client(url: &str, user: &str, pass: &str) -> Result<Client, simple_http::Erro
         .url(url)?
         .auth(user, Some(pass))
         .build();
-
     Ok(Client::with_transport(t))
 }
+
 fn main() {
     let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");
     let username = env::var("BITCOIND_USERNAME").expect("BITCOIND_USERNAME env variable not set");
@@ -26,6 +27,8 @@ fn main() {
 
     let blockhash = Blockhash(best_block_hash);
 
-    let response = GetBlockCommand::new(blockhash).call(&client);
+    let response = GetBlockCommand::new(blockhash)
+        .verbosity(GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation)
+        .call(&client);
     println!("{:#?}", response);
 }

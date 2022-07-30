@@ -9,24 +9,24 @@ pub struct Vin {
     // TODO: Most vins don't have a coinbase key, so how can I make Vin types based on this?
     pub coinbase: Option<String>,
     // TODO: Why wouldn't a vin have this?
-    txinwitness: Option<Vec<String>>,
+    pub txinwitness: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ScriptPubKey {
-    asm: String,
-    hex: String,
-    address: Option<String>,
+    pub asm: String,
+    pub hex: String,
+    pub address: Option<String>,
     // TODO: Can't use "type" as a key because it's a reserved word in Rust.
     #[serde(rename = "type")]
-    type_: String,
+    pub type_: String,
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
-    value: f64,
-    n: i64,
-    script_pub_key: ScriptPubKey,
+    pub value: f64,
+    pub n: i64,
+    pub script_pub_key: ScriptPubKey,
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DecodeRawTransactionResponse {
@@ -74,13 +74,13 @@ pub struct DecodeRawTransactionResponse {
       ]
     }
          */
-    txid: String, // "hex" The transaction id
-    hash: String, // "hex" The transaction hash (differs from txid for witness transactions)
-    size: u64,    // The transaction size
-    vsize: u64,   // The virtual transaction size (differs from size for witness transactions)
-    version: u64,
-    weight: u64,
-    locktime: u64,
+    pub txid: String, // "hex" The transaction id
+    pub hash: String, // "hex" The transaction hash (differs from txid for witness transactions)
+    pub size: u64,    // The transaction size
+    pub vsize: u64,   // The virtual transaction size (differs from size for witness transactions)
+    pub version: u64,
+    pub weight: u64,
+    pub locktime: u64,
     pub vin: Vec<Vin>,
     pub vout: Vec<Vout>,
 }

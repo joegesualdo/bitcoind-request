@@ -2,6 +2,7 @@ mod get_best_block_hash_command;
 mod get_block_command;
 mod get_block_count_command;
 mod get_block_hash_command;
+mod get_raw_transaction_command;
 mod request;
 
 mod callable_command;
@@ -14,6 +15,9 @@ pub use get_block_command::{
 };
 pub use get_block_count_command::GetBlockCountCommand;
 pub use get_block_hash_command::GetBlockHashCommand;
+pub use get_raw_transaction_command::{
+    GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
+};
 
 // TODO: Export and use this enum instead of export each command.
 #[allow(dead_code)]

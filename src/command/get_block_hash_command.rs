@@ -1,6 +1,6 @@
 use crate::command::request::request;
 use crate::command::CallableCommand;
-use crate::BlockhashHexEncoded;
+use crate::Blockhash;
 use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::value::{to_raw_value, RawValue};
@@ -16,7 +16,7 @@ impl GetBlockHashCommand {
 }
 // TODO: struct GetBlockHashCommandResponse(String);
 #[derive(Serialize, Deserialize, Debug)]
-pub struct GetBlockHashCommandResponse(pub String);
+pub struct GetBlockHashCommandResponse(pub Blockhash);
 
 impl CallableCommand for GetBlockHashCommand {
     type Response = GetBlockHashCommandResponse;

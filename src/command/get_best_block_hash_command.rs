@@ -1,7 +1,10 @@
 use crate::command::request::request;
 use crate::command::CallableCommand;
+use crate::Blockhash;
 use crate::BlockhashHexEncoded;
 use jsonrpc::Client;
+use serde::Deserialize;
+use serde::Serialize;
 use serde_json::value::{to_raw_value, RawValue};
 
 pub struct GetBestBlockHashCommand {
@@ -14,8 +17,8 @@ impl GetBestBlockHashCommand {
         }
     }
 }
-// TODO: struct GetBestBlockHashCommandResponse(String);
-type GetBestBlockHashCommandResponse = String;
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GetBestBlockHashCommandResponse(pub Blockhash);
 
 impl CallableCommand for GetBestBlockHashCommand {
     type Response = GetBestBlockHashCommandResponse;

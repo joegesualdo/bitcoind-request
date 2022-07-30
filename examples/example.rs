@@ -1,6 +1,6 @@
 use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
-    GetBlockCommandVerbosity,
+    GetBlockCommandVerbosity, GetBlockCountCommand,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -31,4 +31,7 @@ fn main() {
         .verbosity(GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation)
         .call(&client);
     println!("{:#?}", response);
+
+    let block_count = GetBlockCountCommand::new().call(&client);
+    println!("{:#?}", block_count);
 }

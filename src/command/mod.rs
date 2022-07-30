@@ -1,5 +1,6 @@
 mod get_best_block_hash_command;
 mod get_block_command;
+mod get_block_count_command;
 mod request;
 
 mod callable_command;
@@ -7,6 +8,7 @@ pub use callable_command::CallableCommand;
 
 pub use get_best_block_hash_command::GetBestBlockHashCommand;
 pub use get_block_command::{GetBlockCommand, GetBlockCommandVerbosity};
+pub use get_block_count_command::GetBlockCountCommand;
 
 // TODO: Export and use this enum instead of export each command.
 #[allow(dead_code)]

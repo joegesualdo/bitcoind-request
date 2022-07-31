@@ -32,8 +32,6 @@ pub struct BlockHeader {
     pub nextblockhash: Option<String>, // The hash of the next block
 }
 
-type GetBlockAsSerializedHextEncodedDataCommandResponse = String;
-
 pub struct GetBlockHeaderCommand {
     blockhash: Blockhash,
     verbose: bool,
@@ -50,13 +48,6 @@ impl GetBlockHeaderCommand {
         self
     }
 }
-
-// TODO: This will only work for GetBlockHeaderCommandVerbosity::BlockObjectWithoutTransactionInformation
-//       because the json response has a different structure it returns for each verbosity option.
-//       For example, GetBlockHeaderCommandVerbosity::BlockObjectWithTransactionInformation will return
-//       an array for 'tx' field with full transaction structure, instead of only hashes for the
-//       transaction. To accomplish this, we need to figure out how to have serde handle
-//       conditional responses and map them to appropriate structs.
 impl CallableCommand for GetBlockHeaderCommand {
     type Response = GetBlockHeaderCommandResponse;
     fn call(&self, client: &Client) -> Self::Response {

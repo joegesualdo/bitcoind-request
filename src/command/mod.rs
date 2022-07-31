@@ -2,6 +2,8 @@ mod get_best_block_hash_command;
 mod get_block_command;
 mod get_block_count_command;
 mod get_block_hash_command;
+mod get_block_header_command;
+pub mod get_blockchain_info_command;
 mod get_raw_transaction_command;
 mod request;
 
@@ -15,6 +17,8 @@ pub use get_block_command::{
 };
 pub use get_block_count_command::GetBlockCountCommand;
 pub use get_block_hash_command::GetBlockHashCommand;
+pub use get_block_header_command::GetBlockHeaderCommand;
+pub use get_blockchain_info_command::GetBlockchainInfoCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
@@ -28,23 +32,23 @@ enum Command {
 
 /*
 = Blockchain ==
-getbestblockhash
-getblock "blockhash" ( verbosity )
-getblockchaininfo
-getblockcount
+> getbestblockhash
+> getblock "blockhash" ( verbosity )
+> getblockchaininfo
+> getblockcount
 getblockfilter "blockhash" ( "filtertype" )
-getblockhash height
-getblockheader "blockhash" ( verbose )
-getblockstats hash_or_height ( stats )
-getchaintips
-getchaintxstats ( nblocks "blockhash" )
-getdifficulty
+> getblockhash height
+* getblockheader "blockhash" ( verbose )
+* getblockstats hash_or_height ( stats )
+* getchaintips
+* getchaintxstats ( nblocks "blockhash" )
+* getdifficulty
 getmempoolancestors "txid" ( verbose )
 getmempooldescendants "txid" ( verbose )
 getmempoolentry "txid"
 getmempoolinfo
 getrawmempool ( verbose mempool_sequence )
-gettxout "txid" n ( include_mempool )
+* gettxout "txid" n ( include_mempool )
 gettxoutproof ["txid",...] ( "blockhash" )
 gettxoutsetinfo ( "hash_type" hash_or_height use_index )
 preciousblock "blockhash"
@@ -69,7 +73,7 @@ generatetodescriptor num_blocks "descriptor" ( maxtries )
 
 == Mining ==
 getblocktemplate ( "template_request" )
-getmininginfo
+* getmininginfo
 getnetworkhashps ( nblocks height )
 prioritisetransaction "txid" ( dummy ) fee_delta
 submitblock "hexdata" ( "dummy" )
@@ -79,13 +83,13 @@ submitheader "hexdata"
 addnode "node" "command"
 clearbanned
 disconnectnode ( "address" nodeid )
-getaddednodeinfo ( "node" )
-getconnectioncount
-getnettotals
-getnetworkinfo
-getnodeaddresses ( count "network" )
-getpeerinfo
-listbanned
+* getaddednodeinfo ( "node" )
+* getconnectioncount
+* getnettotals
+* getnetworkinfo
+* getnodeaddresses ( count "network" )
+* getpeerinfo
+* listbanned
 ping
 setban "subnet" "command" ( bantime absolute )
 setnetworkactive state

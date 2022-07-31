@@ -2,7 +2,8 @@ mod command;
 pub use command::{
     CallableCommand, GetBestBlockHashCommand, GetBlockCommand, GetBlockCommandResponse,
     GetBlockCommandTransactionResponse, GetBlockCommandVerbosity, GetBlockCountCommand,
-    GetBlockHashCommand, GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
+    GetBlockHashCommand, GetBlockHeaderCommand, GetBlockchainInfoCommand, GetRawTransactionCommand,
+    GetRawTransactionCommandResponse, Vin,
 };
 use serde::{Deserialize, Serialize};
 #[derive(Debug)]

@@ -1,8 +1,8 @@
 use bitcoin_request::{
     BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
     GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
-    GetBlockCountCommand, GetBlockHashCommand, GetRawTransactionCommand,
-    GetRawTransactionCommandResponse, Vin,
+    GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockchainInfoCommand,
+    GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -113,14 +113,16 @@ fn main() {
     println!("{:#?}", newest_block_hash_response);
 
     let newest_block_hash = newest_block_hash_response.0;
+    // let newest_block = GetBlockCommand::new(newest_block_hash)
+    //    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+    //    .call(&client);
+    // let (total_fees, total_subsidy) = get_total_fees_for_block(&client, newest_block);
+    // println!("Total fees are: {:#?} BTC", total_fees);
+    // println!("Total subsidy: {:#?} BTC", total_subsidy);
+    // println!("block reward: {:#?} BTC", total_subsidy - total_fees);
 
-    let newest_block = GetBlockCommand::new(newest_block_hash)
-        .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
-        .call(&client);
-
-    let (total_fees, total_subsidy) = get_total_fees_for_block(&client, newest_block);
-
-    println!("Total fees are: {:#?} BTC", total_fees);
-    println!("Total subsidy: {:#?} BTC", total_subsidy);
-    println!("block reward: {:#?} BTC", total_subsidy - total_fees);
+    let blockchaininfo_response = GetBlockchainInfoCommand::new().call(&client);
+    println!("{:#?}", blockchaininfo_response);
+    let block_header_response = GetBlockHeaderCommand::new(newest_block_hash).call(&client);
+    println!("{:#?}", block_header_response);
 }

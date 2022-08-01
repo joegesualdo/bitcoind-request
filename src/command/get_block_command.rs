@@ -30,57 +30,13 @@ pub struct Vout {
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DecodeRawTransactionResponse {
-    /*
-         * {                           (json object)
-      "txid" : "hex",           (string) The transaction id
-      "hash" : "hex",           (string) The transaction hash (differs from txid for witness transactions)
-      "size" : n,               (numeric) The transaction size
-      "vsize" : n,              (numeric) The virtual transaction size (differs from size for witness transactions)
-      "weight" : n,             (numeric) The transaction's weight (between vsize*4 - 3 and vsize*4)
-      "version" : n,            (numeric) The version
-      "locktime" : xxx,         (numeric) The lock time
-      "vin" : [                 (json array)
-        {                       (json object)
-          "txid" : "hex",       (string) The transaction id
-          "vout" : n,           (numeric) The output number
-          "scriptSig" : {       (json object) The script
-            "asm" : "str",      (string) asm
-            "hex" : "hex"       (string) hex
-          },
-          "txinwitness" : [     (json array)
-            "hex",              (string) hex-encoded witness data (if any)
-            ...
-          ],
-          "sequence" : n        (numeric) The script sequence number
-        },
-        ...
-      ],
-      "vout" : [                (json array)
-        {                       (json object)
-          "value" : n,          (numeric) The value in BTC
-          "n" : n,              (numeric) index
-          "scriptPubKey" : {    (json object)
-            "asm" : "str",      (string) the asm
-            "hex" : "hex",      (string) the hex
-            "reqSigs" : n,      (numeric) The required sigs
-            "type" : "str",     (string) The type, eg 'pubkeyhash'
-            "addresses" : [     (json array)
-              "str",            (string) bitcoin address
-              ...
-            ]
-          }
-        },
-        ...
-      ]
-    }
-         */
-    pub txid: String, // "hex" The transaction id
-    pub hash: String, // "hex" The transaction hash (differs from txid for witness transactions)
-    pub size: u64,    // The transaction size
-    pub vsize: u64,   // The virtual transaction size (differs from size for witness transactions)
-    pub version: u64,
-    pub weight: u64,
-    pub locktime: u64,
+    pub txid: String,  // "hex" The transaction id
+    pub hash: String,  // "hex" The transaction hash (differs from txid for witness transactions)
+    pub size: u64,     // The transaction size
+    pub vsize: u64,    // The virtual transaction size (differs from size for witness transactions)
+    pub version: u64,  //The version
+    pub weight: u64,   // The transaction's weight (between vsize*4 - 3 and vsize*4)
+    pub locktime: u64, //The lock time
     pub vin: Vec<Vin>,
     pub vout: Vec<Vout>,
 }

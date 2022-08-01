@@ -181,8 +181,9 @@ fn main() {
         .call(&client);
     println!("{:#?}", get_difficulty_response);
 
-    let tx_id = "2e3f95139c25669cb5d0380f52f38edc3185a26452c319340f7e1fba9f3fe2cc".to_string();
-    let get_tx_out_response = GetTxOutCommand::new(tx_id, 0) //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+    let tx_id = "df4f4e724eb1b9b4f5047a99ff215e239205d81d0bd01f9608c8105ce09959d7".to_string();
+    let get_tx_out_response = GetTxOutCommand::new(tx_id, 0)
+        .include_mempool(true) //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
         .call(&client);
     println!("{:#?}", get_tx_out_response);
 }

@@ -83,6 +83,8 @@ impl GetTxOutCommand {
             include_mempool: None,
         }
     }
+    // TODO: Currently errors out if you don't enable mempool inclusion but search for a mempool
+    // transaction
     pub fn include_mempool(&mut self, include_mempool: bool) -> &Self {
         self.include_mempool = Some(include_mempool);
         self

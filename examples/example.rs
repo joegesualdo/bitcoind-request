@@ -4,8 +4,8 @@ use bitcoin_request::{
     GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand,
     GetBlockchainInfoCommand, GetChainTipsCommand, GetChainTxStatsCommand, GetDifficultyCommand,
     GetMiningInfoCommand, GetNetworkHashPsCommand, GetRawTransactionCommand,
-    GetRawTransactionCommandResponse, GetTxOutCommand, StatsArgumentChoices, TargetBlockArgument,
-    Vin,
+    GetRawTransactionCommandResponse, GetTxOutCommand, GetTxOutSetInfoCommand,
+    StatsArgumentChoices, TargetBlockArgument, Vin,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -169,17 +169,16 @@ fn main() {
     //println!("{:#?}", block_header_response);
 
     let block_stats_response =
-        GetBlockStatsCommand::new(TargetBlockArgument::Hash(newest_block_hash)) //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+        GetBlockStatsCommand::new(TargetBlockArgument::Hash(newest_block_hash))
+            .add_selective_stats(vec![StatsArgumentChoices::MedianTime])
             .call(&client);
     println!("{:#?}", block_stats_response);
-    let get_chain_tips_response = GetChainTipsCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
-        .call(&client);
+    let get_chain_tips_response = GetChainTipsCommand::new().call(&client);
     println!("{:#?}", get_chain_tips_response);
-    let get_chain_tx_stats_response = GetChainTxStatsCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+    let get_chain_tx_stats_response = GetChainTxStatsCommand::new() //.set_n_blocks(2016)
         .call(&client);
-    println!("{:#?}", get_chain_tx_stats_response);
-    let get_difficulty_response = GetDifficultyCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
-        .call(&client);
+    println!("HERE:{:#?}", get_chain_tx_stats_response);
+    let get_difficulty_response = GetDifficultyCommand::new().call(&client);
     println!("{:#?}", get_difficulty_response);
 
     let tx_id = "df4f4e724eb1b9b4f5047a99ff215e239205d81d0bd01f9608c8105ce09959d7".to_string();
@@ -191,4 +190,6 @@ fn main() {
     println!("{:#?}", get_mining_info_response);
     let get_network_hash_ps_response = GetNetworkHashPsCommand::new().call(&client);
     println!("{:#?}", get_network_hash_ps_response);
+    let get_tx_out_set_info_response = GetTxOutSetInfoCommand::new().call(&client);
+    println!("{:#?}", get_tx_out_set_info_response);
 }

@@ -12,6 +12,7 @@ mod get_mining_info_command;
 mod get_network_hash_ps_command;
 mod get_raw_transaction_command;
 mod get_tx_out_command;
+mod get_tx_out_set_info_command;
 mod request;
 
 mod callable_command;
@@ -38,6 +39,7 @@ pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
 pub use get_tx_out_command::GetTxOutCommand;
+pub use get_tx_out_set_info_command::GetTxOutSetInfoCommand;
 
 // TODO: Export and use this enum instead of export each command.
 #[allow(dead_code)]
@@ -66,7 +68,7 @@ getmempoolinfo
 getrawmempool ( verbose mempool_sequence )
 > gettxout "txid" n ( include_mempool )
 gettxoutproof ["txid",...] ( "blockhash" )
-gettxoutsetinfo ( "hash_type" hash_or_height use_index )
+> gettxoutsetinfo ( "hash_type" hash_or_height use_index )
 preciousblock "blockhash"
 pruneblockchain height
 savemempool

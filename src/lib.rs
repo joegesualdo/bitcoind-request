@@ -5,7 +5,7 @@ pub use command::{
     GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand, GetBlockchainInfoCommand,
     GetChainTipsCommand, GetChainTxStatsCommand, GetDifficultyCommand, GetMiningInfoCommand,
     GetNetworkHashPsCommand, GetRawTransactionCommand, GetRawTransactionCommandResponse,
-    GetTxOutCommand, StatsArgumentChoices, TargetBlockArgument, Vin,
+    GetTxOutCommand, GetTxOutSetInfoCommand, StatsArgumentChoices, TargetBlockArgument, Vin,
 };
 use serde::{Deserialize, Serialize};
 #[derive(Debug)]

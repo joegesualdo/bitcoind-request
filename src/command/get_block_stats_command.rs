@@ -176,7 +176,7 @@ pub struct GetBlockStatsCommandWithSelectiveStatsResponse {
     maxfee: Option<u64>,         // Maximum fee in the block
     maxfeerate: Option<u64>,     // Maximum feerate (in satoshis per virtual byte)
     maxtxsize: Option<u64>,      // Maximum transaction size
-    medianfee: Option<u65>,      //Truncated median fee in the block
+    medianfee: Option<u64>,      //Truncated median fee in the block
     mediantime: Option<u64>,     // The block median time past
     mediantxsize: Option<u64>,   // Truncated median transaction size
     minfee: Option<u64>,         // Minimum fee in the block

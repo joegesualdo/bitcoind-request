@@ -5,6 +5,7 @@ mod get_block_hash_command;
 mod get_block_header_command;
 mod get_block_stats_command;
 pub mod get_blockchain_info_command;
+mod get_chain_tips_command;
 mod get_raw_transaction_command;
 mod request;
 
@@ -23,6 +24,7 @@ pub use get_block_stats_command::{
     GetBlockStatsCommand, StatsArgumentChoices, TargetBlockArgument,
 };
 pub use get_blockchain_info_command::GetBlockchainInfoCommand;
+pub use get_chain_tips_command::GetChainTipsCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
@@ -43,7 +45,7 @@ enum Command {
 getblockfilter "blockhash" ( "filtertype" )
 > getblockhash height
 > getblockheader "blockhash" ( verbose )
-* getblockstats hash_or_height ( stats )
+> getblockstats hash_or_height ( stats )
 * getchaintips
 * getchaintxstats ( nblocks "blockhash" )
 * getdifficulty

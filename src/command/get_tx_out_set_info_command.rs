@@ -65,6 +65,7 @@ pub struct GetTxOutSetInfoCommandResponse {
 
 impl CallableCommand for GetTxOutSetInfoCommand {
     type Response = GetTxOutSetInfoCommandResponse;
+    // TODO: This currently fails. Seems realted to this: https://github.com/bitcoin/bitcoin/issues/25724
     fn call(&self, client: &Client) -> Self::Response {
         let command = GET_TX_OUT_SET_INFO_COMMAND;
         let hash_type_arg = &self.hash_type;

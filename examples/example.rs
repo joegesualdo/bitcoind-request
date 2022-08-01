@@ -3,8 +3,8 @@ use bitcoin_request::{
     GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
     GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand,
     GetBlockchainInfoCommand, GetChainTipsCommand, GetChainTxStatsCommand, GetDifficultyCommand,
-    GetRawTransactionCommand, GetRawTransactionCommandResponse, StatsArgumentChoices,
-    TargetBlockArgument, Vin,
+    GetRawTransactionCommand, GetRawTransactionCommandResponse, GetTxOutCommand,
+    StatsArgumentChoices, TargetBlockArgument, Vin,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -180,4 +180,9 @@ fn main() {
     let get_difficulty_response = GetDifficultyCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
         .call(&client);
     println!("{:#?}", get_difficulty_response);
+
+    let tx_id = "2e3f95139c25669cb5d0380f52f38edc3185a26452c319340f7e1fba9f3fe2cc".to_string();
+    let get_tx_out_response = GetTxOutCommand::new(tx_id, 0) //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+        .call(&client);
+    println!("{:#?}", get_tx_out_response);
 }

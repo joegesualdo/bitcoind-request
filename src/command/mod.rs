@@ -9,6 +9,7 @@ mod get_chain_tips_command;
 mod get_chain_tx_stats_command;
 mod get_difficulty_command;
 mod get_raw_transaction_command;
+mod get_tx_out_command;
 mod request;
 
 mod callable_command;
@@ -32,6 +33,7 @@ pub use get_difficulty_command::GetDifficultyCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
+pub use get_tx_out_command::GetTxOutCommand;
 
 // TODO: Export and use this enum instead of export each command.
 #[allow(dead_code)]

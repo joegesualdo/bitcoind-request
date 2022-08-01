@@ -2,8 +2,9 @@ use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
     GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
     GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand,
-    GetBlockchainInfoCommand, GetChainTipsCommand, GetRawTransactionCommand,
-    GetRawTransactionCommandResponse, StatsArgumentChoices, TargetBlockArgument, Vin,
+    GetBlockchainInfoCommand, GetChainTipsCommand, GetChainTxStatsCommand,
+    GetRawTransactionCommand, GetRawTransactionCommandResponse, StatsArgumentChoices,
+    TargetBlockArgument, Vin,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -173,4 +174,7 @@ fn main() {
     let get_chain_tips_response = GetChainTipsCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
         .call(&client);
     println!("{:#?}", get_chain_tips_response);
+    let get_chain_tx_stats_response = GetChainTxStatsCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+        .call(&client);
+    println!("{:#?}", get_chain_tx_stats_response);
 }

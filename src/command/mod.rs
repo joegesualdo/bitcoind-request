@@ -8,6 +8,7 @@ pub mod get_blockchain_info_command;
 mod get_chain_tips_command;
 mod get_chain_tx_stats_command;
 mod get_difficulty_command;
+mod get_mining_info_command;
 mod get_raw_transaction_command;
 mod get_tx_out_command;
 mod request;
@@ -30,6 +31,7 @@ pub use get_blockchain_info_command::GetBlockchainInfoCommand;
 pub use get_chain_tips_command::GetChainTipsCommand;
 pub use get_chain_tx_stats_command::GetChainTxStatsCommand;
 pub use get_difficulty_command::GetDifficultyCommand;
+pub use get_mining_info_command::GetMiningInfoCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
@@ -60,7 +62,7 @@ getmempooldescendants "txid" ( verbose )
 getmempoolentry "txid"
 getmempoolinfo
 getrawmempool ( verbose mempool_sequence )
-* gettxout "txid" n ( include_mempool )
+> gettxout "txid" n ( include_mempool )
 gettxoutproof ["txid",...] ( "blockhash" )
 gettxoutsetinfo ( "hash_type" hash_or_height use_index )
 preciousblock "blockhash"

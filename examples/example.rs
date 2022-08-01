@@ -1,8 +1,9 @@
 use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
     GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
-    GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockchainInfoCommand,
-    GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
+    GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand,
+    GetBlockchainInfoCommand, GetRawTransactionCommand, GetRawTransactionCommandResponse,
+    StatsArgumentChoices, TargetBlockArgument, Vin,
 };
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
 use jsonrpc::Client;
@@ -147,81 +148,26 @@ fn main() {
     println!("{:#?}", newest_block_hash_response);
 
     let newest_block_hash = newest_block_hash_response.0;
-    let newest_block = GetBlockCommand::new(newest_block_hash)
-        .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
-        .call(&client);
-    let b = GetBlockCommand::new(Blockhash(
-        "0000000000000000000821ac160f88b20f6d8741f88e92ff34cd8362bce7bf58".to_string(),
-    ))
-    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
-    .call(&client);
-    let mut inputs = 0;
-    let mut outputs = 0;
-    let mut transaction_count = 0;
-    let mut virtual_bytes = 0.0;
-    match &b {
-        GetBlockCommandResponse::Block(block) => {
-            for transaction in &block.tx {
-                let mut is_segwit = false;
-                let mut is_coinbase = false;
-                //println!("START -----------------------");
-                transaction_count = transaction_count + 1;
-                match transaction {
-                    GetBlockCommandTransactionResponse::Raw(transaction) => {
-                        for v in &transaction.vin {
-                            if !is_segwit {
-                                is_segwit = v.txinwitness.is_some();
-                            } else {
-                            }
-                            if !is_coinbase {
-                                is_coinbase = v.coinbase.is_some();
-                            }
-                        }
-                        let input_count = transaction.vin.len();
-                        let output_count = transaction.vout.len();
-                        if !is_coinbase {
-                            if is_segwit {
-                                virtual_bytes =
-                                    virtual_bytes + (transaction.weight as f64 / 4.0) as f64;
-                            } else {
-                                virtual_bytes = virtual_bytes + (transaction.weight) as f64;
-                            }
-                        }
-                        //if !is_coinbase {
-                        //virtual_bytes = virtual_bytes + transaction.vsize as f64;
-                        //println!("Coinbase: {:?}", transaction);
-                        //println!("Coinbase: {:?}", transaction.vin)
-                        //}
-                        //if is_segwit {
-                        //    //virtual_bytes = 140.0
-                        //    virtual_bytes = virtual_bytes
-                        //        + ((input_count as f64 * 68.5)
-                        //            + (output_count as f64 * 31.0)
-                        //            + 10.0);
-                        //    //virtual_bytes = virtual_bytes + (transaction.weight as f64 / 4.0);
-                        //    //virtual_bytes = virtual_bytes + (transaction.size as f64 / 4.0);
-                        //} else {
-                        //    //virtual_bytes = virtual_bytes + (transaction.size as f64);
-                        //    virtual_bytes = virtual_bytes
-                        //        + (input_count as f64 * 146.0 + output_count as f64 * 33.0 + 10.0);
-                        //}
-                    }
-                    GetBlockCommandTransactionResponse::Id(_s) => {}
-                }
-                //println!("End-----------------------");
-            }
-        }
-        GetBlockCommandResponse::BlockHash(_hash) => (),
-    };
-    let (total_fees, total_subsidy, sats_per_bytes) = get_total_fees_for_block(&client, b);
-    println!("sats per bytes: {:#?}", sats_per_bytes);
-    println!("Total fees are: {:#?} BTC", total_fees);
+    //let newest_block = GetBlockCommand::new(newest_block_hash)
+    //    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+    //    .call(&client);
+    //let b = GetBlockCommand::new(Blockhash(
+    //    "0000000000000000000821ac160f88b20f6d8741f88e92ff34cd8362bce7bf58".to_string(),
+    //))
+    //.verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+    //.call(&client);
+    //let (total_fees, total_subsidy, sats_per_bytes) = get_total_fees_for_block(&client, b);
+    //println!("sats per bytes: {:#?}", sats_per_bytes);
+    //println!("Total fees are: {:#?} BTC", total_fees);
 
     //println!("Total subsidy: {:#?} BTC", total_subsidy);
     //println!("block reward: {:#?} BTC", total_subsidy - total_fees);
 
-    // let blockchaininfo_response = GetBlockchainInfoCommand::new().call(&client);
-    // println!("{:#?}", blockchaininfo_response);
-    // let block_header_response = GetBlockHeaderCommand::new(newest_block_hash).call(&client);
-    // println!("{:#?}", block_header_response);
+    //let block_header_response = GetBlockHeaderCommand::new(newest_block_hash).call(&client);
+    //println!("{:#?}", block_header_response);
+
+    let block_stats_response =
+        GetBlockStatsCommand::new(TargetBlockArgument::Hash(newest_block_hash)) //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+            .call(&client);
+    println!("{:#?}", block_stats_response);
 }

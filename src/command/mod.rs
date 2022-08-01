@@ -9,6 +9,7 @@ mod get_chain_tips_command;
 mod get_chain_tx_stats_command;
 mod get_difficulty_command;
 mod get_mining_info_command;
+mod get_network_hash_ps_command;
 mod get_raw_transaction_command;
 mod get_tx_out_command;
 mod request;
@@ -32,6 +33,7 @@ pub use get_chain_tips_command::GetChainTipsCommand;
 pub use get_chain_tx_stats_command::GetChainTxStatsCommand;
 pub use get_difficulty_command::GetDifficultyCommand;
 pub use get_mining_info_command::GetMiningInfoCommand;
+pub use get_network_hash_ps_command::GetNetworkHashPsCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
@@ -87,8 +89,8 @@ generatetodescriptor num_blocks "descriptor" ( maxtries )
 
 == Mining ==
 getblocktemplate ( "template_request" )
-* getmininginfo
-getnetworkhashps ( nblocks height )
+> getmininginfo
+> getnetworkhashps ( nblocks height )
 prioritisetransaction "txid" ( dummy ) fee_delta
 submitblock "hexdata" ( "dummy" )
 submitheader "hexdata"

@@ -7,6 +7,7 @@ mod get_block_stats_command;
 pub mod get_blockchain_info_command;
 mod get_chain_tips_command;
 mod get_chain_tx_stats_command;
+mod get_difficulty_command;
 mod get_raw_transaction_command;
 mod request;
 
@@ -27,6 +28,7 @@ pub use get_block_stats_command::{
 pub use get_blockchain_info_command::GetBlockchainInfoCommand;
 pub use get_chain_tips_command::GetChainTipsCommand;
 pub use get_chain_tx_stats_command::GetChainTxStatsCommand;
+pub use get_difficulty_command::GetDifficultyCommand;
 pub use get_raw_transaction_command::{
     GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin,
 };
@@ -49,8 +51,8 @@ getblockfilter "blockhash" ( "filtertype" )
 > getblockheader "blockhash" ( verbose )
 > getblockstats hash_or_height ( stats )
 > getchaintips
-* getchaintxstats ( nblocks "blockhash" )
-* getdifficulty
+> getchaintxstats ( nblocks "blockhash" )
+> getdifficulty
 getmempoolancestors "txid" ( verbose )
 getmempooldescendants "txid" ( verbose )
 getmempoolentry "txid"

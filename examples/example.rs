@@ -2,7 +2,7 @@ use bitcoin_request::{
     Blockhash, BlockhashHexEncoded, CallableCommand, GetBestBlockHashCommand, GetBlockCommand,
     GetBlockCommandResponse, GetBlockCommandTransactionResponse, GetBlockCommandVerbosity,
     GetBlockCountCommand, GetBlockHashCommand, GetBlockHeaderCommand, GetBlockStatsCommand,
-    GetBlockchainInfoCommand, GetChainTipsCommand, GetChainTxStatsCommand,
+    GetBlockchainInfoCommand, GetChainTipsCommand, GetChainTxStatsCommand, GetDifficultyCommand,
     GetRawTransactionCommand, GetRawTransactionCommandResponse, StatsArgumentChoices,
     TargetBlockArgument, Vin,
 };
@@ -177,4 +177,7 @@ fn main() {
     let get_chain_tx_stats_response = GetChainTxStatsCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
         .call(&client);
     println!("{:#?}", get_chain_tx_stats_response);
+    let get_difficulty_response = GetDifficultyCommand::new() //.add_selective_stats(vec![StatsArgumentChoices::AvgFee])
+        .call(&client);
+    println!("{:#?}", get_difficulty_response);
 }

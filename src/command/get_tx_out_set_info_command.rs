@@ -29,8 +29,6 @@ const DEFAULT_HASH_TYPE_ARG: &str = "hash_serialized_2";
 
 use crate::command::request::request;
 use crate::command::CallableCommand;
-use crate::Blockhash;
-use crate::BlockhashHexEncoded;
 use jsonrpc::Client;
 use serde::Deserialize;
 use serde::Serialize;

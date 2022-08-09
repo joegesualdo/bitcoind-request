@@ -1,5 +1,5 @@
 [package]
-name = "bitcoin-request"
+name = "bitcoind-request"
 version = "0.1.0"
 edition = "2021"
 

@@ -27,7 +27,7 @@ const N_BLOCKS_ARGUMENT_FOR_BLOCKS_SINCE_LAST_DIFFICULT_CHANGE: i64 = -1;
 const HEIGHT_ARGUMENT_FOR_CALCULATING_BASED_ON_CURRENT_HEIGHT: i64 = -1;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct GetNetworkHashPsCommandResponse(f64);
+pub struct GetNetworkHashPsCommandResponse(pub f64);
 
 pub enum BlocksToIncludeArg {
     NBlocks(u64),

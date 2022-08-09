@@ -30,14 +30,14 @@ const GET_DIFFICULTY_COMMAND: &str = "getmininginfo";
 pub struct GetMiningInfoCommand {}
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetMiningInfoCommandResponse {
-    blocks: u64,                     // The current block
-    currentblockweight: Option<u64>, //  The block weight of the last assembled block (only present if a block was ever assembled)
-    currentblocktx: Option<u64>, //  The number of block transactions of the last assembled block (only present if a block was ever assembled)
-    difficulty: f64,             // The current difficulty
-    networkhashps: f64,          // The network hashes per second
-    pooledtx: u64,               // The size of the mempool
-    chain: String,               // current network name (main, test, regtest)
-    warnings: String,            // any network and blockchain warnings
+    pub blocks: u64,                     // The current block
+    pub currentblockweight: Option<u64>, //  The block weight of the last assembled block (only present if a block was ever assembled)
+    pub currentblocktx: Option<u64>, //  The number of block transactions of the last assembled block (only present if a block was ever assembled)
+    pub difficulty: f64,             // The current difficulty
+    pub networkhashps: f64,          // The network hashes per second
+    pub pooledtx: u64,               // The size of the mempool
+    pub chain: String,               // current network name (main, test, regtest)
+    pub warnings: String,            // any network and blockchain warnings
 }
 impl GetMiningInfoCommand {
     pub fn new() -> Self {

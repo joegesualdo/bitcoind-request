@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
-use bitcoin_request::command::{
+use bitcoind_request::command::{
     get_best_block_hash::GetBestBlockHashCommand,
     get_block::{
         GetBlockCommand, GetBlockCommandResponse, GetBlockCommandTransactionResponse,
@@ -25,7 +25,7 @@ use bitcoin_request::command::{
     CallableCommand,
 };
 
-use bitcoin_request::{Blockhash, BlockhashHexEncoded};
+use bitcoind_request::{Blockhash, BlockhashHexEncoded};
 
 use chrono::{DateTime, TimeZone, Utc};
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
@@ -121,4 +121,12 @@ fn main() {
     let chain_size = get_chain_size(&client);
     let chain_size_in_gbs = chain_size as f64 / 1_000_000_000.0;
     println!("CHAIN SIZE: {:#?}GB", chain_size_in_gbs);
+
+    let hash_rate = GetNetworkHashPsCommand::new()
+        .set_n_blocks(
+            bitcoind_request::command::get_network_hash_ps::BlocksToIncludeArg::NBlocks(2016),
+        )
+        .set_height(bitcoind_request::command::get_network_hash_ps::HeightArg::Height(block_height))
+        .call(&client);
+    println!("hash_rate:{:#?}", hash_rate)
 }

@@ -50,11 +50,11 @@ impl GetNetworkHashPsCommand {
                                               // defined in the docs: https://bitcoincore.org/en/doc/0.21.0/rpc/mining/getnetworkhashps/
         }
     }
-    pub fn set_n_blocks(&mut self, n_blocks: BlocksToIncludeArg) -> &Self {
+    pub fn set_n_blocks(mut self, n_blocks: BlocksToIncludeArg) -> Self {
         self.n_blocks = n_blocks;
         self
     }
-    pub fn set_height(&mut self, height: HeightArg) -> &Self {
+    pub fn set_height(mut self, height: HeightArg) -> Self {
         self.height = height;
         self
     }

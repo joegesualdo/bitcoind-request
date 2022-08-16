@@ -4,6 +4,9 @@
 
 This library provides typesafe functions over raw RPC bitcoind commands to easily and safely retrieve information from a bitcoin node.
 
+As this library only provides typesafety over raw RPC commands, functions will be mapped 1:1 to RPC commands. See [bitcoin core docs](https://bitcoincore.org/en/doc/0.17.0/rpc/) for a list of all commands and what they return.
+
+If you're looking for additional information about the Bitcoin Network (i.e. time since last block, etc) , take a look at [bitcoin-node-query](https://github.com/joegesualdo/bitcoin-node-query), which provides additional functions to query bitcoin network data.
 
 ## Install
 > Add package to Cargo.toml file

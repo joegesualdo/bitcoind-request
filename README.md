@@ -12,7 +12,7 @@ If you're looking for additional information about the Bitcoin Network (i.e. tim
 > Add package to Cargo.toml file
 ```rust
 [dependencies]
-bitcoind-request = "0.1.3"
+bitcoind-request = "0.1.4"
 ```
 
 ## Usage:

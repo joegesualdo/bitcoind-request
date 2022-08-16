@@ -22,6 +22,7 @@ use bitcoind_request::{
     },
 };
 
+// Create a Client.
 let bitcoind_password: &str = ...
 let bitcoind_username: &str = ...
 let bitcoind_url = "127.0.0.1:8332"
@@ -31,9 +32,13 @@ let client = Client::new(
         &bitcoind_password
     ).expect("failed to create client");
 
+// Get the estimated size of the block and undo files on disk.
+// Note: this calls "getblockchaininfo" bitcoin core rpc command under the hood.
 let blockchain_info = GetBlockchainInfoCommand::new().call(client);
 println!("{}", blockchain_info.size_on_disk);
 
+// Compute statistics about the total number and rate of transactions in the chain.
+// Note: this calls "getchaintxstats" bitcoin core rpc command under the hood.
 let chain_tx_stats = GetChainTxStatsCommand::new()
 	.set_n_blocks(2016)
 	.call(client);

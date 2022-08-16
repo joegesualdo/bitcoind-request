@@ -32,11 +32,13 @@ let client = Client::new(
     ).expect("failed to create client");
 
 let blockchain_info = GetBlockchainInfoCommand::new().call(client);
-println!("{}", blockchain_info.size_on_disk)
+println!("{}", blockchain_info.size_on_disk);
 
 let chain_tx_stats = GetChainTxStatsCommand::new()
 	.set_n_blocks(2016)
 	.call(client);
+println!("{:#?}", chain_tx_stats);
+
 ```
 ## Commands
 List of all bitcoind commands can be found at [bitcoin.org](https://bitcoincore.org/en/doc/0.21.0/rpc/)

@@ -1,3 +1,4 @@
+use crate::client::Client;
 /*
 getblockheader "blockhash" ( verbose )
 
@@ -36,7 +37,6 @@ Examples:
  */
 use crate::command::{request::request, CallableCommand};
 use crate::Blockhash;
-use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 

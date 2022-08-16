@@ -50,9 +50,9 @@ Examples:
 */
 use std::collections::HashMap;
 
+use crate::client::Client;
 use crate::command::request::request;
 use crate::command::CallableCommand;
-use jsonrpc::Client;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::value::RawValue;

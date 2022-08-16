@@ -38,8 +38,10 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "gettxout", "params": ["txid", 1]}' -H 'content-type: text/plain;' http://127.0.0.1:8332/
  */
 
-use crate::command::{request::request, CallableCommand};
-use jsonrpc::Client;
+use crate::{
+    client::Client,
+    command::{request::request, CallableCommand},
+};
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 

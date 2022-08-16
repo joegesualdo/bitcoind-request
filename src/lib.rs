@@ -1,3 +1,4 @@
+pub mod client;
 pub mod command;
 // pub use command;
 use serde::{Deserialize, Serialize};

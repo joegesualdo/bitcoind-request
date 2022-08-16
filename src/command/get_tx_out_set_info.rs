@@ -27,9 +27,9 @@ Examples:
 const GET_TX_OUT_SET_INFO_COMMAND: &str = "gettxoutsetinfo";
 const DEFAULT_HASH_TYPE_ARG: &str = "hash_serialized_2";
 
+use crate::client::Client;
 use crate::command::request::request;
 use crate::command::CallableCommand;
-use jsonrpc::Client;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::value::{to_raw_value, RawValue};

@@ -1,3 +1,4 @@
+use crate::client::Client;
 /*
 getchaintxstats ( nblocks "blockhash" )
 
@@ -27,7 +28,6 @@ use crate::command::request::request;
 use crate::command::CallableCommand;
 use crate::Blockhash;
 use crate::BlockhashHexEncoded;
-use jsonrpc::Client;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::value::{to_raw_value, RawValue};

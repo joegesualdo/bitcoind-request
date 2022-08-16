@@ -58,12 +58,11 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblockstats", "params": ["00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09", ["minfeerate","avgfeerate"]]}' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblockstats", "params": [1000, ["minfeerate","avgfeerate"]]}' -H 'content-type: text/plain;' http://127.0.0.1:8332/
  */
-use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 use std::fmt;
 
-use crate::{command::CallableCommand, Blockhash};
+use crate::{client::Client, command::CallableCommand, Blockhash};
 
 use super::request::request;
 

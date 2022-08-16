@@ -79,10 +79,10 @@ Examples:
 > bitcoin-cli getrawtransaction "mytxid" false "myblockhash"
 > bitcoin-cli getrawtransaction "mytxid" true "myblockhash"
 */
-use jsonrpc::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 
+use crate::client::Client;
 use crate::{command::CallableCommand, Blockhash};
 
 use crate::command::request::request;

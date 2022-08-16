@@ -1,4 +1,4 @@
-use jsonrpc::Client;
+use crate::client::Client;
 
 pub trait CallableCommand {
     type Response;

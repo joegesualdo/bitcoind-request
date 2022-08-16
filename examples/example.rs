@@ -1,35 +1,38 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
-use bitcoind_request::command::{
-    get_best_block_hash::GetBestBlockHashCommand,
-    get_block::{
-        GetBlockCommand, GetBlockCommandResponse, GetBlockCommandTransactionResponse,
-        GetBlockCommandVerbosity,
+use bitcoind_request::{
+    client::Client,
+    command::{
+        get_best_block_hash::GetBestBlockHashCommand,
+        get_block::{
+            GetBlockCommand, GetBlockCommandResponse, GetBlockCommandTransactionResponse,
+            GetBlockCommandVerbosity,
+        },
+        get_block_count::GetBlockCountCommand,
+        get_block_hash::GetBlockHashCommand,
+        get_block_header::GetBlockHeaderCommand,
+        get_block_stats::{
+            GetBlockStatsCommand, GetBlockStatsCommandResponse,
+            GetBlockStatsCommandWithAllStatsResponse, StatsArgumentChoices, TargetBlockArgument,
+        },
+        get_blockchain_info::GetBlockchainInfoCommand,
+        get_chain_tips::GetChainTipsCommand,
+        get_chain_tx_stats::GetChainTxStatsCommand,
+        get_difficulty::GetDifficultyCommand,
+        get_mining_info::GetMiningInfoCommand,
+        get_network_hash_ps::GetNetworkHashPsCommand,
+        get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
+        get_tx_out::GetTxOutCommand,
+        get_tx_out_set_info::GetTxOutSetInfoCommand,
+        CallableCommand,
     },
-    get_block_count::GetBlockCountCommand,
-    get_block_hash::GetBlockHashCommand,
-    get_block_header::GetBlockHeaderCommand,
-    get_block_stats::{
-        GetBlockStatsCommand, GetBlockStatsCommandResponse,
-        GetBlockStatsCommandWithAllStatsResponse, StatsArgumentChoices, TargetBlockArgument,
-    },
-    get_blockchain_info::GetBlockchainInfoCommand,
-    get_chain_tips::GetChainTipsCommand,
-    get_chain_tx_stats::GetChainTxStatsCommand,
-    get_difficulty::GetDifficultyCommand,
-    get_mining_info::GetMiningInfoCommand,
-    get_network_hash_ps::GetNetworkHashPsCommand,
-    get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
-    get_tx_out::GetTxOutCommand,
-    get_tx_out_set_info::GetTxOutSetInfoCommand,
-    CallableCommand,
 };
 
+use bitcoind_request::client;
 use bitcoind_request::{Blockhash, BlockhashHexEncoded};
 
 use chrono::{DateTime, TimeZone, Utc};
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
-use jsonrpc::Client;
 use std::time::{Duration, SystemTime};
 use std::{env, time::SystemTimeError};
 
@@ -38,14 +41,6 @@ fn format_duration(seconds: i64) -> String {
     let seconds_formatted = seconds % 60;
     let minutes_formatted = (seconds / 60) % 60;
     format!("{:#?}:{:#?}", minutes_formatted, seconds_formatted)
-}
-
-fn client(url: &str, user: &str, pass: &str) -> Result<Client, simple_http::Error> {
-    let t = SimpleHttpTransport::builder()
-        .url(url)?
-        .auth(user, Some(pass))
-        .build();
-    Ok(Client::with_transport(t))
 }
 
 fn get_block_height(client: &Client) -> u64 {
@@ -97,7 +92,8 @@ fn get_chain_size(client: &Client) -> u64 {
 fn main() {
     let password = env::var("BITCOIND_PASSWORD").expect("BITCOIND_PASSWORD env variable not set");
     let username = env::var("BITCOIND_USERNAME").expect("BITCOIND_USERNAME env variable not set");
-    let client = client("127.0.0.1:8332", &username, &password).expect("failed to create client");
+    let url = env::var("BITCOIND_URL").expect("BITCOIND_URL env variable not set");
+    let client = Client::new(&url, &username, &password).expect("failed to create client");
 
     let block_height = get_block_height(&client);
     println!("BLOCK HEIGHT: {:#?}", block_height);

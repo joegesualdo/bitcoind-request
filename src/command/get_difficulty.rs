@@ -10,10 +10,9 @@ Examples:
 > bitcoin-cli getdifficulty
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getdifficulty", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 */
-use crate::command::request::request;
 use crate::command::CallableCommand;
 use crate::Blockhash;
-use jsonrpc::Client;
+use crate::{client::Client, command::request::request};
 use serde::{Deserialize, Serialize};
 use serde_json::value::{to_raw_value, RawValue};
 

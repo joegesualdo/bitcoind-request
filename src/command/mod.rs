@@ -11,6 +11,7 @@ pub mod get_connection_count;
 pub mod get_difficulty;
 pub mod get_mining_info;
 pub mod get_network_hash_ps;
+pub mod get_network_info;
 pub mod get_node_addresses;
 pub mod get_peer_info;
 pub mod get_raw_transaction;
@@ -78,7 +79,7 @@ disconnectnode ( "address" nodeid )
 > getconnectioncount
 * getnettotals
 * getnetworkinfo
-* getnodeaddresses ( count "network" )
+> getnodeaddresses ( count "network" )
 > getpeerinfo
 * listbanned
 ping

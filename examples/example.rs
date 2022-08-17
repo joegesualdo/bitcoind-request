@@ -22,6 +22,7 @@ use bitcoind_request::{
         get_difficulty::GetDifficultyCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
+        get_network_info::GetNetworkInfoCommand,
         get_node_addresses::{CountArg, GetNodeAddressesCommand, NetworkArg},
         get_peer_info::GetPeerInfoCommand,
         get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
@@ -152,5 +153,8 @@ fn main() {
     println!("reachable nodes count: {}", reachable_nodes);
 
     let peer_info = GetPeerInfoCommand::new().call(&client);
-    println!("peerinfo:{:#?}", peer_info.0.last())
+    println!("peerinfo:{:#?}", peer_info.0.last());
+
+    let network_info = GetNetworkInfoCommand::new().call(&client);
+    println!("network info:{:#?}", network_info)
 }

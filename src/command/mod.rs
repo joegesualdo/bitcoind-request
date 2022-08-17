@@ -9,6 +9,7 @@ pub mod get_chain_tips;
 pub mod get_chain_tx_stats;
 pub mod get_connection_count;
 pub mod get_difficulty;
+pub mod get_mempool_info;
 pub mod get_mining_info;
 pub mod get_network_hash_ps;
 pub mod get_network_info;
@@ -78,7 +79,7 @@ disconnectnode ( "address" nodeid )
 * getaddednodeinfo ( "node" )
 > getconnectioncount
 * getnettotals
-* getnetworkinfo
+> getnetworkinfo
 > getnodeaddresses ( count "network" )
 > getpeerinfo
 * listbanned
@@ -98,7 +99,7 @@ decoderawtransaction "hexstring" ( iswitness )
 decodescript "hexstring"
 finalizepsbt "psbt" ( extract )
 fundrawtransaction "hexstring" ( options iswitness )
-getrawtransaction "txid" ( verbose "blockhash" )
+> getrawtransaction "txid" ( verbose "blockhash" )
 joinpsbts ["psbt",...]
 sendrawtransaction "hexstring" ( maxfeerate )
 signrawtransactionwithkey "hexstring" ["privatekey",...] ( [{"txid":"hex","vout":n,"scriptPubKey":"hex","redeemScript":"hex","witnessScript":"hex","amount":amount},...] "sighashtype" )

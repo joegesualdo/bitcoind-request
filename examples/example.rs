@@ -20,6 +20,7 @@ use bitcoind_request::{
         get_chain_tx_stats::GetChainTxStatsCommand,
         get_connection_count::GetConnectionCountCommand,
         get_difficulty::GetDifficultyCommand,
+        get_mempool_info::GetMempoolInfoCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
         get_network_info::GetNetworkInfoCommand,
@@ -141,7 +142,6 @@ fn main() {
     let mut reachable_nodes = 0;
     node_addresses.0.iter().for_each(|node| {
         let current_datetime = chrono::offset::Utc::now();
-        let current_timestamp = current_datetime.timestamp();
         let datetime_of_node = Utc.timestamp(node.time as i64, 0);
         let difference: Duration = current_datetime.signed_duration_since(datetime_of_node);
         let seconds = difference.num_seconds();
@@ -156,5 +156,8 @@ fn main() {
     println!("peerinfo:{:#?}", peer_info.0.last());
 
     let network_info = GetNetworkInfoCommand::new().call(&client);
-    println!("network info:{:#?}", network_info)
+    println!("network info:{:#?}", network_info);
+
+    let mempool_info = GetMempoolInfoCommand::new().call(&client);
+    println!("mempool info:{:#?}", mempool_info)
 }

@@ -15,6 +15,7 @@ pub mod get_network_hash_ps;
 pub mod get_network_info;
 pub mod get_node_addresses;
 pub mod get_peer_info;
+pub mod get_raw_mempool;
 pub mod get_raw_transaction;
 pub mod get_tx_out;
 pub mod get_tx_out_set_info;

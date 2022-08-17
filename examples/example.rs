@@ -26,6 +26,7 @@ use bitcoind_request::{
         get_network_info::GetNetworkInfoCommand,
         get_node_addresses::{CountArg, GetNodeAddressesCommand, NetworkArg},
         get_peer_info::GetPeerInfoCommand,
+        get_raw_mempool::GetRawMempoolCommand,
         get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
         get_tx_out::GetTxOutCommand,
         get_tx_out_set_info::GetTxOutSetInfoCommand,
@@ -159,5 +160,11 @@ fn main() {
     println!("network info:{:#?}", network_info);
 
     let mempool_info = GetMempoolInfoCommand::new().call(&client);
-    println!("mempool info:{:#?}", mempool_info)
+    println!("mempool info:{:#?}", mempool_info);
+
+    let raw_mempool = GetRawMempoolCommand::new()
+        .set_verbose(true)
+        .set_mempool_sequence(false)
+        .call(&client);
+    println!("raw_mempool:{:#?}", raw_mempool)
 }

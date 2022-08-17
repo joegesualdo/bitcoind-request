@@ -22,6 +22,7 @@ use bitcoind_request::{
         get_difficulty::GetDifficultyCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
+        get_node_addresses::{CountArg, GetNodeAddressesCommand},
         get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
         get_tx_out::GetTxOutCommand,
         get_tx_out_set_info::GetTxOutSetInfoCommand,
@@ -128,5 +129,10 @@ fn main() {
     println!("hash_rate:{:#?}", hash_rate);
 
     let connection_count = GetConnectionCountCommand::new().call(&client);
-    println!("connection_count:{:#?}", connection_count)
+    println!("connection_count:{:#?}", connection_count);
+
+    let node_addresses = GetNodeAddressesCommand::new()
+        .set_count(CountArg::AllAddresses)
+        .call(&client);
+    println!("node addresses:{:#?}", node_addresses.0.len())
 }

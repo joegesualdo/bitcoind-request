@@ -11,6 +11,7 @@ pub mod get_connection_count;
 pub mod get_difficulty;
 pub mod get_mining_info;
 pub mod get_network_hash_ps;
+pub mod get_node_addresses;
 pub mod get_raw_transaction;
 pub mod get_tx_out;
 pub mod get_tx_out_set_info;

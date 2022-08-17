@@ -18,6 +18,7 @@ use bitcoind_request::{
         get_blockchain_info::GetBlockchainInfoCommand,
         get_chain_tips::GetChainTipsCommand,
         get_chain_tx_stats::GetChainTxStatsCommand,
+        get_connection_count::GetConnectionCountCommand,
         get_difficulty::GetDifficultyCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
@@ -124,5 +125,8 @@ fn main() {
         )
         .set_height(bitcoind_request::command::get_network_hash_ps::HeightArg::Height(block_height))
         .call(&client);
-    println!("hash_rate:{:#?}", hash_rate)
+    println!("hash_rate:{:#?}", hash_rate);
+
+    let connection_count = GetConnectionCountCommand::new().call(&client);
+    println!("connection_count:{:#?}", connection_count)
 }

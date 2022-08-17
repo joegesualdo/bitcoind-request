@@ -32,6 +32,8 @@ pub struct NodeAddress {
     pub services: u64,   // The services offered
     pub address: String, // The address of the node
     pub port: u64,       // The port of the node
+    // TODO: Use enum
+    pub network: String, // The network (ipv4, ipv6, onion, i2p) the node connected through
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetNodeAddressesCommandResponse(pub Vec<NodeAddress>);
@@ -40,17 +42,31 @@ pub enum CountArg {
     MaxAddresses(u64),
     AllAddresses,
 }
+pub enum NetworkArg {
+    All,
+    Ipv4,
+    Ipv6,
+    Onion,
+    I2p,
+}
 pub struct GetNodeAddressesCommand {
     count: CountArg,
+    network: NetworkArg,
 }
+
 impl GetNodeAddressesCommand {
     pub fn new() -> Self {
         GetNodeAddressesCommand {
             count: CountArg::MaxAddresses(1),
+            network: NetworkArg::All,
         }
     }
     pub fn set_count(mut self, count: CountArg) -> Self {
         self.count = count;
+        self
+    }
+    pub fn set_network(mut self, network: NetworkArg) -> Self {
+        self.network = network;
         self
     }
 }
@@ -62,9 +78,23 @@ impl CallableCommand for GetNodeAddressesCommand {
             CountArg::MaxAddresses(count) => count,
             CountArg::AllAddresses => &0,
         };
+        let maybe_network_arg = match &self.network {
+            NetworkArg::All => None,
+            NetworkArg::Ipv4 => Some("ipv4"),
+            NetworkArg::Ipv6 => Some("ipv6"),
+            NetworkArg::Onion => Some("onion"),
+            NetworkArg::I2p => Some("i2p"),
+        };
         let count_arg_raw_value = to_raw_value(count_arg).unwrap();
+
+        let params = match maybe_network_arg {
+            Some(network_arg) => {
+                let network_arg_raw_value = to_raw_value(network_arg).unwrap();
+                vec![count_arg_raw_value, network_arg_raw_value]
+            }
+            None => vec![count_arg_raw_value],
+        };
         let command = "getnodeaddresses";
-        let params = vec![count_arg_raw_value];
         let r = request(client, command, params);
         let response: GetNodeAddressesCommandResponse = r.result().unwrap();
         response

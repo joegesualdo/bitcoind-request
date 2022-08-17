@@ -22,7 +22,8 @@ use bitcoind_request::{
         get_difficulty::GetDifficultyCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
-        get_node_addresses::{CountArg, GetNodeAddressesCommand},
+        get_node_addresses::{CountArg, GetNodeAddressesCommand, NetworkArg},
+        get_peer_info::GetPeerInfoCommand,
         get_raw_transaction::{GetRawTransactionCommand, GetRawTransactionCommandResponse, Vin},
         get_tx_out::GetTxOutCommand,
         get_tx_out_set_info::GetTxOutSetInfoCommand,
@@ -33,9 +34,9 @@ use bitcoind_request::{
 use bitcoind_request::client;
 use bitcoind_request::{Blockhash, BlockhashHexEncoded};
 
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{DateTime, Duration, TimeZone, Utc};
 use jsonrpc::simple_http::{self, SimpleHttpTransport};
-use std::time::{Duration, SystemTime};
+use std::time::SystemTime;
 use std::{env, time::SystemTimeError};
 
 struct Seconds(pub i64);
@@ -133,6 +134,23 @@ fn main() {
 
     let node_addresses = GetNodeAddressesCommand::new()
         .set_count(CountArg::AllAddresses)
+        .set_network(NetworkArg::All)
         .call(&client);
-    println!("node addresses:{:#?}", node_addresses.0.len())
+    println!("node addresses:{:#?}", node_addresses.0);
+    let mut reachable_nodes = 0;
+    node_addresses.0.iter().for_each(|node| {
+        let current_datetime = chrono::offset::Utc::now();
+        let current_timestamp = current_datetime.timestamp();
+        let datetime_of_node = Utc.timestamp(node.time as i64, 0);
+        let difference: Duration = current_datetime.signed_duration_since(datetime_of_node);
+        let seconds = difference.num_seconds();
+        let seconds_in_a_day = 60 * 60 * 24;
+        if seconds < seconds_in_a_day {
+            reachable_nodes = reachable_nodes + 1;
+        }
+    });
+    println!("reachable nodes count: {}", reachable_nodes);
+
+    let peer_info = GetPeerInfoCommand::new().call(&client);
+    println!("peerinfo:{:#?}", peer_info.0.last())
 }

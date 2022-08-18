@@ -170,9 +170,20 @@ fn main() {
     println!("raw_mempool:{:#?}", raw_mempool);
 
     // what happens if the txid is no longer in the mempool
-    let mempool_entry = GetMempoolEntryCommand::new(
-        "cbcedc2a784311f24c7cce95faae32fab093b2e98417d79db1eb9620115206e7".to_string(),
-    )
+    //let mempool_entry = GetMempoolEntryCommand::new(
+    //    "cbcedc2a784311f24c7cce95faae32fab093b2e98417d79db1eb9620115206e7".to_string(),
+    //)
+    //.call(&client);
+    //let mempool_entry = GetMempoolEntryCommand::new(
+    //    "cbcedc2a784311f24c7cce95faae32fab093b2e98417d79db1eb9620115206e7".to_string(),
+    //)
+    //.call(&client);
+    //println!("mempool entry:{:#?}", mempool_entry);
+    //
+    let block = GetBlockCommand::new(Blockhash(
+        "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),
+    ))
+    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
     .call(&client);
-    println!("mempool entry:{:#?}", mempool_entry);
+    println!("mempool entry:{:#?}", block);
 }

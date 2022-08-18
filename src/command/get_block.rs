@@ -60,11 +60,40 @@ use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Vin {
-    // TODO: Most vins don't have a coinbase key, so how can I make Vin types based on this?
-    pub coinbase: Option<String>,
-    // TODO: Why wouldn't a vin have this?
-    pub txinwitness: Option<Vec<String>>,
+#[serde(rename_all = "camelCase")]
+#[serde(untagged)]
+pub enum Vin {
+    Coinbase(CoinbaseVin),
+    NonCoinbase(NonCoinbaseVin),
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct HexEncodedWitnessData(pub String);
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct CoinbaseVin {
+    pub coinbase: String,
+    pub sequence: u64,                           // The script sequence number
+    pub txinwitness: Vec<HexEncodedWitnessData>, // hex-encoded witness data (if any)
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ScriptSig {
+    pub asm: String, // "asm", NOT A HEX
+    pub hex: String, // "hex", hex
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct NonCoinbaseVin {
+    pub txid: String, // "hex" The transaction id
+    pub vout: u64,    // The output number
+    pub script_sig: ScriptSig,
+    pub sequence: u64, // The script sequence number
+    // TODO: Why is this optional?
+    pub txinwitness: Option<Vec<HexEncodedWitnessData>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -94,6 +123,17 @@ pub struct DecodeRawTransactionResponse {
     pub locktime: u64, //The lock time
     pub vin: Vec<Vin>,
     pub vout: Vec<Vout>,
+}
+
+// TODO: I don't think this belongs in this package. We should focus on RPC request and responses
+// and abstract a better data layer into another package.
+impl DecodeRawTransactionResponse {
+    pub fn is_coinbase_transaction(&self) -> bool {
+        match self.vin.first().unwrap() {
+            Vin::Coinbase(_x) => true,
+            Vin::NonCoinbase(_x) => false,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

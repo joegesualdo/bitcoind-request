@@ -9,6 +9,7 @@ pub mod get_chain_tips;
 pub mod get_chain_tx_stats;
 pub mod get_connection_count;
 pub mod get_difficulty;
+pub mod get_mempool_entry;
 pub mod get_mempool_info;
 pub mod get_mining_info;
 pub mod get_network_hash_ps;

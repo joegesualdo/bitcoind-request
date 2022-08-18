@@ -20,6 +20,7 @@ use bitcoind_request::{
         get_chain_tx_stats::GetChainTxStatsCommand,
         get_connection_count::GetConnectionCountCommand,
         get_difficulty::GetDifficultyCommand,
+        get_mempool_entry::GetMempoolEntryCommand,
         get_mempool_info::GetMempoolInfoCommand,
         get_mining_info::GetMiningInfoCommand,
         get_network_hash_ps::GetNetworkHashPsCommand,
@@ -166,5 +167,12 @@ fn main() {
         .set_verbose(true)
         .set_mempool_sequence(false)
         .call(&client);
-    println!("raw_mempool:{:#?}", raw_mempool)
+    println!("raw_mempool:{:#?}", raw_mempool);
+
+    // what happens if the txid is no longer in the mempool
+    let mempool_entry = GetMempoolEntryCommand::new(
+        "cbcedc2a784311f24c7cce95faae32fab093b2e98417d79db1eb9620115206e7".to_string(),
+    )
+    .call(&client);
+    println!("mempool entry:{:#?}", mempool_entry);
 }

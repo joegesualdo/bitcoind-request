@@ -219,7 +219,6 @@ impl CallableCommand for GetBlockCommand {
         let verbosity_arg_raw_value = to_raw_value(&verbosity_arg).unwrap();
         let command = "getblock";
         let params = vec![blockhash_arg_raw_value, verbosity_arg_raw_value];
-        println!("{:?}", params);
         let r = request(client, command, params);
         let response: GetBlockCommandResponse = r.result().unwrap();
         response

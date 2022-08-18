@@ -56,9 +56,10 @@ Result (if verbose is set to true):
       "scriptPubKey" : {             (json object)
         "asm" : "str",               (string) the asm
         "hex" : "str",               (string) the hex
-        "reqSigs" : n,               (numeric) The required sigs
+        "reqSigs" : n,               (numeric, optional) (DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Number of required signatures
         "type" : "str",              (string) The type, eg 'pubkeyhash'
-        "addresses" : [              (json array)
+        "address" : "str",           (string, optional) bitcoin address (only if a well-defined address exists)
+        "addresses" : [              (json array, optional) (DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of bitcoin addresses
           "str",                     (string) bitcoin address
           ...
         ]
@@ -78,6 +79,7 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getrawtransaction", "params": ["mytxid", true]}' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 > bitcoin-cli getrawtransaction "mytxid" false "myblockhash"
 > bitcoin-cli getrawtransaction "mytxid" true "myblockhash"
+
 */
 use serde::{Deserialize, Serialize};
 use serde_json::value::to_raw_value;
@@ -120,12 +122,15 @@ pub struct BitcoinAddress(pub String);
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
-    pub asm: String,           // "asm", NOT A HEX
-    pub hex: String,           // the hex
+    pub asm: String, // "asm", NOT A HEX
+    pub hex: String, // the hex
+    // deprecated
     pub req_sigs: Option<u64>, // The required sigs
     #[serde(alias = "type")]
     pub type_: String, // The type, eg 'pubkeyhash'
-                               //pub addresses: Vec<BitcoinAddress>,
+    pub address: Option<String>,
+    // deprecated
+    pub addresses: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -168,10 +173,16 @@ pub struct Vout {
     pub value: f64, // The value in BTC
     pub n: u64,     // index
     pub script_pub_key: ScriptPubKey,
+    // Deprecated
+    pub req_sigs: Option<u64>,
+    pub address: Option<String>,
+    // Deprecated
+    pub addresses: Option<Vec<String>>,
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
+    pub in_active_chain: Option<bool>,
     pub hex: String,   // "hex" The serialized, hex-encoded data for 'txid'
     pub txid: String,  // "hex" The transaction id (same as provided)
     pub hash: String,  // "hex" The transaction hash (differs from txid for witness transactions)

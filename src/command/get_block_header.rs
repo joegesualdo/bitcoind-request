@@ -93,7 +93,6 @@ impl CallableCommand for GetBlockHeaderCommand {
         let verbose_arg_raw_value = to_raw_value(&verbose_arg).unwrap();
         let command = "getblockheader";
         let params = vec![blockhash_arg_raw_value, verbose_arg_raw_value];
-        println!("{:?}", params);
         let r = request(client, command, params);
         let response: GetBlockHeaderCommandResponse = r.result().unwrap();
         response

@@ -186,4 +186,18 @@ fn main() {
     .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
     .call(&client);
     println!("mempool entry:{:#?}", block);
+
+    let block = GetBlockCommand::new(Blockhash(
+        "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),
+    ))
+    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+    .call(&client);
+    println!("mempool entry:{:#?}", block);
+
+    let transaction = GetRawTransactionCommand::new(
+        "e4205670407fddf1ab901ba08f0bf8c1960304801f5467df5a2f8d80f26c1360".to_string(),
+    )
+    .verbose(true)
+    .call(&client);
+    println!("mempool entry:{:#?}", transaction);
 }

@@ -114,13 +114,15 @@ pub struct Vout {
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DecodeRawTransactionResponse {
-    pub txid: String,  // "hex" The transaction id
+    pub in_active_chain: Option<bool>,
+    pub hex: String,   // "hex" The serialized, hex-encoded data for 'txid'
+    pub txid: String,  // "hex" The transaction id (same as provided)
     pub hash: String,  // "hex" The transaction hash (differs from txid for witness transactions)
-    pub size: u64,     // The transaction size
+    pub size: u64,     // The serialized transaction size
     pub vsize: u64,    // The virtual transaction size (differs from size for witness transactions)
-    pub version: u64,  //The version
-    pub weight: u64,   // The transaction's weight (between vsize*4 - 3 and vsize*4)
-    pub locktime: u64, //The lock time
+    pub weight: u64,   //  The transaction's weight (between vsize*4-3 and vsize*4)
+    pub version: u64,  //  The version
+    pub locktime: u64, // The lock time
     pub vin: Vec<Vin>,
     pub vout: Vec<Vout>,
 }
@@ -173,6 +175,7 @@ pub struct Block {
     pub previousblockhash: Option<String>, // The hash of the previous block
     // TODO: Why isn't this always there?
     pub nextblockhash: Option<String>, // The hash of the next block
+                                       // TODO: fee?
 }
 
 type GetBlockAsSerializedHextEncodedDataCommandResponse = String;

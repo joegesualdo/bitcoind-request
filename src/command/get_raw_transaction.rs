@@ -152,8 +152,8 @@ pub enum Vin {
 #[serde(rename_all = "camelCase")]
 pub struct CoinbaseVin {
     pub coinbase: String,
-    pub sequence: u64,                           // The script sequence number
-    pub txinwitness: Vec<HexEncodedWitnessData>, // hex-encoded witness data (if any)
+    pub sequence: u64, // The script sequence number
+    pub txinwitness: Option<Vec<HexEncodedWitnessData>>, // hex-encoded witness data (if any)
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -202,12 +202,12 @@ pub struct Transaction {
 // TODO: I don't think this belongs in this package. We should focus on RPC request and responses
 // and abstract a better data layer into another package.
 impl Transaction {
-    pub fn is_coinbase_transaction(&self) -> bool {
-        match self.vin.first().unwrap() {
-            Vin::Coinbase(_x) => true,
-            Vin::NonCoinbase(_x) => false,
-        }
-    }
+    // pub fn is_coinbase_transaction(&self) -> bool {
+    //     match self.vin.first().unwrap() {
+    //         Vin::Coinbase(_x) => true,
+    //         Vin::NonCoinbase(_x) => false,
+    //     }
+    // }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

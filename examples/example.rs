@@ -180,24 +180,24 @@ fn main() {
     //.call(&client);
     //println!("mempool entry:{:#?}", mempool_entry);
     //
-    // let block = GetBlockCommand::new(Blockhash(
-    //     "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),
-    // ))
-    // .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
-    // .call(&client);
-    // println!("mempool entry:{:#?}", block);
-
-    // let block = GetBlockCommand::new(Blockhash(
-    //     "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),
-    // ))
-    // .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
-    // .call(&client);
-    // println!("mempool entry:{:#?}", block);
-
-    let transaction = GetRawTransactionCommand::new(
-        "ef851362b06934b0082d4e2ea8a544c1982002deacef65198e18dc85a73aa49e".to_string(),
-    )
-    .verbose(true)
+    let block = GetBlockCommand::new(Blockhash(
+        "00000000000000000002bd186c0aa527e4c9a8b1b1fa69e477f3163b83e81941".to_string(),
+    ))
+    .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
     .call(&client);
-    println!("mempool entry:{:#?}", transaction);
+    println!("mempool entry:{:#?}", block);
+
+    // let block = GetBlockCommand::new(Blockhash(
+    //     "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),
+    // ))
+    // .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
+    // .call(&client);
+    // println!("mempool entry:{:#?}", block);
+
+    // let transaction = GetRawTransactionCommand::new(
+    //     "ef851362b06934b0082d4e2ea8a544c1982002deacef65198e18dc85a73aa49e".to_string(),
+    // )
+    // .verbose(true)
+    // .call(&client);
+    // println!("mempool entry:{:#?}", transaction);
 }

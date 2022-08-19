@@ -74,8 +74,8 @@ pub struct HexEncodedWitnessData(pub String);
 #[serde(rename_all = "camelCase")]
 pub struct CoinbaseVin {
     pub coinbase: String,
-    pub sequence: u64,                           // The script sequence number
-    pub txinwitness: Vec<HexEncodedWitnessData>, // hex-encoded witness data (if any)
+    pub sequence: u64, // The script sequence number
+    pub txinwitness: Option<Vec<HexEncodedWitnessData>>, // hex-encoded witness data (if any)
 }
 
 #[derive(Serialize, Deserialize, Debug)]

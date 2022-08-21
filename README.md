@@ -1,4 +1,9 @@
-☠️⚠️ Work In Progress ⚠️☠️
+---
+
+**⚠️ This is experimental. Please use at your own risk.⚠️**
+
+---
+
 # Bitcoind Request 
 > Send RPC commands to a bitcoind server.
 

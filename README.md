@@ -1,11 +1,11 @@
+# Bitcoind Request 
+> Send RPC commands to a bitcoind server.
+
 ---
 
 **⚠️ This is experimental. Please use at your own risk.⚠️**
 
 ---
-
-# Bitcoind Request 
-> Send RPC commands to a bitcoind server.
 
 This library provides typesafe functions over raw RPC bitcoind commands to easily and safely retrieve information from a bitcoin node.
 

@@ -52,16 +52,19 @@ fn format_duration(seconds: i64) -> String {
 
 fn get_block_height(client: &Client) -> u64 {
     let block_count = GetBlockCountCommand::new().call(client);
-    return block_count.0;
+    return block_count.unwrap().0;
 }
 
 fn get_time_since_last_block(client: &Client) -> Seconds {
     let block_count = GetBlockCountCommand::new().call(client);
-    let arg = TargetBlockArgument::Height(block_count.0);
-    let block_stats_response = GetBlockStatsCommand::new(arg).call(client);
-    let time_of_last_block = match block_stats_response {
-        GetBlockStatsCommandResponse::AllStats(response) => response.time,
-        GetBlockStatsCommandResponse::SelectiveStats(response) => response.time.unwrap(),
+    let arg = TargetBlockArgument::Height(block_count.unwrap().0);
+    let maybe_block_stats_response = GetBlockStatsCommand::new(arg).call(client);
+    let time_of_last_block = match maybe_block_stats_response {
+        Ok(block_stats_response) => match block_stats_response {
+            GetBlockStatsCommandResponse::AllStats(response) => response.time,
+            GetBlockStatsCommandResponse::SelectiveStats(response) => response.time.unwrap(),
+        },
+        Err(_) => panic!("panic"),
     };
     let current_datetime = chrono::offset::Utc::now();
     let current_timestamp = current_datetime.timestamp();
@@ -77,23 +80,24 @@ fn get_time_since_last_block(client: &Client) -> Seconds {
 
 fn get_average_block_time(client: &Client) -> u64 {
     let blocks_to_calculate = 2016;
-    let chain_tx_stats = GetChainTxStatsCommand::new()
+    let maybe_chain_tx_stats = GetChainTxStatsCommand::new()
         .set_n_blocks(2016)
         .call(client);
-    let average_seconds_per_block = chain_tx_stats.window_interval / blocks_to_calculate;
+    let average_seconds_per_block =
+        maybe_chain_tx_stats.unwrap().window_interval / blocks_to_calculate;
     average_seconds_per_block
 }
 
 fn get_total_money_supply(client: &Client) -> u64 {
     // calls to gettxoutsetinfo are erroring out due to this: https://github.com/apoelstra/rust-jsonrpc/issues/67
     let tx_out_set_info = GetTxOutSetInfoCommand::new().call(client);
-    tx_out_set_info.total_amount
+    tx_out_set_info.unwrap().total_amount
 }
 
 // gets the chain size in bytes
 fn get_chain_size(client: &Client) -> u64 {
     let blockchain_info = GetBlockchainInfoCommand::new().call(client);
-    blockchain_info.size_on_disk
+    blockchain_info.unwrap().size_on_disk
 }
 
 fn main() {
@@ -140,22 +144,22 @@ fn main() {
         .set_count(CountArg::AllAddresses)
         .set_network(NetworkArg::All)
         .call(&client);
-    println!("node addresses:{:#?}", node_addresses.0);
+    println!("node addresses:{:#?}", node_addresses.unwrap().0);
     let mut reachable_nodes = 0;
-    node_addresses.0.iter().for_each(|node| {
-        let current_datetime = chrono::offset::Utc::now();
-        let datetime_of_node = Utc.timestamp(node.time as i64, 0);
-        let difference: Duration = current_datetime.signed_duration_since(datetime_of_node);
-        let seconds = difference.num_seconds();
-        let seconds_in_a_day = 60 * 60 * 24;
-        if seconds < seconds_in_a_day {
-            reachable_nodes = reachable_nodes + 1;
-        }
-    });
+    // node_addresses.unwrap().0.iter().for_each(|node| {
+    //     let current_datetime = chrono::offset::Utc::now();
+    //     let datetime_of_node = Utc.timestamp(node.time as i64, 0);
+    //     let difference: Duration = current_datetime.signed_duration_since(datetime_of_node);
+    //     let seconds = difference.num_seconds();
+    //     let seconds_in_a_day = 60 * 60 * 24;
+    //     if seconds < seconds_in_a_day {
+    //         reachable_nodes = reachable_nodes + 1;
+    //     }
+    // });
     println!("reachable nodes count: {}", reachable_nodes);
 
     let peer_info = GetPeerInfoCommand::new().call(&client);
-    println!("peerinfo:{:#?}", peer_info.0.last());
+    println!("peerinfo:{:#?}", peer_info.unwrap().0.last());
 
     let network_info = GetNetworkInfoCommand::new().call(&client);
     println!("network info:{:#?}", network_info);
@@ -180,12 +184,25 @@ fn main() {
     //.call(&client);
     //println!("mempool entry:{:#?}", mempool_entry);
     //
-    let block = GetBlockCommand::new(Blockhash(
-        "00000000000000000002bd186c0aa527e4c9a8b1b1fa69e477f3163b83e81941".to_string(),
+    let maybe_get_block_command_response = GetBlockCommand::new(Blockhash(
+        "0000000000000000000137aa8bf31a6b8ad42ce1c08c33acfc033f97f0ef2bc7".to_string(),
     ))
     .verbosity(GetBlockCommandVerbosity::BlockObjectWithTransactionInformation)
     .call(&client);
-    println!("mempool entry:{:#?}", block);
+
+    match maybe_get_block_command_response {
+        Ok(get_block_command_response) => match get_block_command_response {
+            GetBlockCommandResponse::Block(block) => {
+                println!("height: {}", block.height);
+                println!("hash: {}", block.hash);
+                println!("time: {}", block.time);
+                println!("size: {}", block.size);
+                println!("weight: {}", block.weight);
+            }
+            GetBlockCommandResponse::BlockHash(hash) => panic!("not supported"),
+        },
+        Err(err) => {}
+    }
 
     // let block = GetBlockCommand::new(Blockhash(
     //     "000000000000000000010887fdbbc731013853dde72c31110dc7130606df9474".to_string(),

@@ -34,12 +34,12 @@ pub struct GetBestBlockHashCommandResponse(pub Blockhash);
 
 impl CallableCommand for GetBestBlockHashCommand {
     type Response = GetBestBlockHashCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let blockhash_arg = &self.blockhash_hex_encoded.0;
         let command = "getbestblockhash";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetBestBlockHashCommandResponse = r.result().unwrap();
-        response
+        let response: GetBestBlockHashCommandResponse = r.result()?;
+        Ok(response)
     }
 }

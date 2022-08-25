@@ -49,11 +49,11 @@ pub struct GetMempoolInfoCommandResponse {
 
 impl CallableCommand for GetMempoolInfoCommand {
     type Response = GetMempoolInfoCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getmempoolinfo";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetMempoolInfoCommandResponse = r.result().unwrap();
-        response
+        let response: GetMempoolInfoCommandResponse = r.result()?;
+        Ok(response)
     }
 }

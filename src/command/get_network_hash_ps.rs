@@ -63,7 +63,7 @@ impl GetNetworkHashPsCommand {
 }
 impl CallableCommand for GetNetworkHashPsCommand {
     type Response = GetNetworkHashPsCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let mut params: Vec<i64> = vec![];
         let n_blocks_arg: i64 = match self.n_blocks {
             BlocksToIncludeArg::NBlocks(n_blocks) => n_blocks as i64,
@@ -80,7 +80,7 @@ impl CallableCommand for GetNetworkHashPsCommand {
         let height_arg_raw_value = to_raw_value(&height_arg).unwrap();
         let mut params = vec![n_blocks_arg_raw_value, height_arg_raw_value];
         let r = request(client, GET_NETWORK_HASH_PS_COMMAND, params);
-        let response: GetNetworkHashPsCommandResponse = r.result().unwrap();
-        response
+        let response: GetNetworkHashPsCommandResponse = r.result()?;
+        Ok(response)
     }
 }

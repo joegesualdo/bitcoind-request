@@ -40,9 +40,9 @@ getblockfilter "blockhash" ( "filtertype" )
 > getdifficulty
 getmempoolancestors "txid" ( verbose )
 getmempooldescendants "txid" ( verbose )
-getmempoolentry "txid"
-getmempoolinfo
-getrawmempool ( verbose mempool_sequence )
+> getmempoolentry "txid"
+> getmempoolinfo
+> getrawmempool ( verbose mempool_sequence )
 > gettxout "txid" n ( include_mempool )
 gettxoutproof ["txid",...] ( "blockhash" )
 > gettxoutsetinfo ( "hash_type" hash_or_height use_index )

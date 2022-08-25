@@ -73,7 +73,7 @@ impl GetNodeAddressesCommand {
 
 impl CallableCommand for GetNodeAddressesCommand {
     type Response = GetNodeAddressesCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let count_arg = match &self.count {
             CountArg::MaxAddresses(count) => count,
             CountArg::AllAddresses => &0,
@@ -96,7 +96,7 @@ impl CallableCommand for GetNodeAddressesCommand {
         };
         let command = "getnodeaddresses";
         let r = request(client, command, params);
-        let response: GetNodeAddressesCommandResponse = r.result().unwrap();
-        response
+        let response: GetNodeAddressesCommandResponse = r.result()?;
+        Ok(response)
     }
 }

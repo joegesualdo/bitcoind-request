@@ -86,7 +86,7 @@ impl GetBlockHeaderCommand {
 }
 impl CallableCommand for GetBlockHeaderCommand {
     type Response = GetBlockHeaderCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let verbose_arg = self.verbose;
         let blockhash_arg = &self.blockhash.0;
         let blockhash_arg_raw_value = to_raw_value(&blockhash_arg).unwrap();
@@ -94,7 +94,7 @@ impl CallableCommand for GetBlockHeaderCommand {
         let command = "getblockheader";
         let params = vec![blockhash_arg_raw_value, verbose_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetBlockHeaderCommandResponse = r.result().unwrap();
-        response
+        let response: GetBlockHeaderCommandResponse = r.result()?;
+        Ok(response)
     }
 }

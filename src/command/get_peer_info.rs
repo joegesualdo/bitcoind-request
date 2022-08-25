@@ -166,10 +166,10 @@ pub struct GetPeerInfoCommandResponse(pub Vec<ConnectedNetworkNode>);
 
 impl CallableCommand for GetPeerInfoCommand {
     type Response = GetPeerInfoCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let params = vec![];
         let r = request(client, GET_PEER_INFO_COMMAND, params);
-        let response: GetPeerInfoCommandResponse = r.result().unwrap();
-        response
+        let response: GetPeerInfoCommandResponse = r.result()?;
+        Ok(response)
     }
 }

@@ -244,7 +244,7 @@ pub enum GetBlockStatsCommandResponse {
 
 impl CallableCommand for GetBlockStatsCommand {
     type Response = GetBlockStatsCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let target_block = &self.target_block;
         let hash_or_height_arg_raw_value = match target_block {
             TargetBlockArgument::Hash(hash) => to_raw_value(&hash).unwrap(),
@@ -258,10 +258,10 @@ impl CallableCommand for GetBlockStatsCommand {
         let params = vec![hash_or_height_arg_raw_value, stats_arg_raw_value];
         let r = request(client, command, params);
         let response: GetBlockStatsCommandResponse = if stats_arg.is_empty() {
-            GetBlockStatsCommandResponse::AllStats(r.result().unwrap())
+            GetBlockStatsCommandResponse::AllStats(r.result()?)
         } else {
-            GetBlockStatsCommandResponse::SelectiveStats(r.result().unwrap())
+            GetBlockStatsCommandResponse::SelectiveStats(r.result()?)
         };
-        response
+        Ok(response)
     }
 }

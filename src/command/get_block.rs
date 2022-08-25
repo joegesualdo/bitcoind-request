@@ -175,7 +175,6 @@ pub struct Block {
     pub previousblockhash: Option<String>, // The hash of the previous block
     // TODO: Why isn't this always there?
     pub nextblockhash: Option<String>, // The hash of the next block
-                                       // TODO: fee?
 }
 
 type GetBlockAsSerializedHextEncodedDataCommandResponse = String;
@@ -211,7 +210,7 @@ impl GetBlockCommand {
 //       conditional responses and map them to appropriate structs.
 impl CallableCommand for GetBlockCommand {
     type Response = GetBlockCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let verbosity_arg = match self.verbosity {
             GetBlockCommandVerbosity::SerializedHexEncodedData => 0,
             GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation => 1,
@@ -223,7 +222,7 @@ impl CallableCommand for GetBlockCommand {
         let command = "getblock";
         let params = vec![blockhash_arg_raw_value, verbosity_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetBlockCommandResponse = r.result().unwrap();
-        response
+        let response: GetBlockCommandResponse = r.result()?;
+        Ok(response)
     }
 }

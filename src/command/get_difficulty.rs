@@ -28,10 +28,10 @@ pub struct GetDifficultyCommandResponse(pub f64);
 
 impl CallableCommand for GetDifficultyCommand {
     type Response = GetDifficultyCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let params = vec![];
         let r = request(client, GET_DIFFICULTY_COMMAND, params);
-        let response: GetDifficultyCommandResponse = r.result().unwrap();
-        response
+        let response: GetDifficultyCommandResponse = r.result()?;
+        Ok(response)
     }
 }

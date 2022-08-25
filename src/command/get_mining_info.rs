@@ -46,10 +46,10 @@ impl GetMiningInfoCommand {
 
 impl CallableCommand for GetMiningInfoCommand {
     type Response = GetMiningInfoCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let params = vec![];
         let r = request(client, GET_DIFFICULTY_COMMAND, params);
-        let response: GetMiningInfoCommandResponse = r.result().unwrap();
-        response
+        let response: GetMiningInfoCommandResponse = r.result()?;
+        Ok(response)
     }
 }

@@ -34,13 +34,13 @@ pub struct GetBlockHashCommandResponse(pub Blockhash);
 
 impl CallableCommand for GetBlockHashCommand {
     type Response = GetBlockHashCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let height_arg = &self.height;
         let height_arg_raw_value = to_raw_value(height_arg).unwrap();
         let command = "getblockhash";
         let params = vec![height_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetBlockHashCommandResponse = r.result().unwrap();
-        response
+        let response: GetBlockHashCommandResponse = r.result()?;
+        Ok(response)
     }
 }

@@ -94,7 +94,7 @@ impl GetTxOutCommand {
 }
 impl CallableCommand for GetTxOutCommand {
     type Response = GetTxOutCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let tx_id_arg = &self.tx_id;
         let n_arg = &self.n;
         let include_mempool = &self.include_mempool;
@@ -107,7 +107,7 @@ impl CallableCommand for GetTxOutCommand {
             params.push(include_mempool_arg_raw_value)
         }
         let r = request(client, GET_TX_OUT_COMMAND, params);
-        let response: GetTxOutCommandResponse = r.result().unwrap();
-        response
+        let response: GetTxOutCommandResponse = r.result()?;
+        Ok(response)
     }
 }

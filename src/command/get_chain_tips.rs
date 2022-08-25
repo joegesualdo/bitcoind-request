@@ -57,11 +57,11 @@ pub struct GetChainTipsCommandResponse(Vec<Tip>);
 
 impl CallableCommand for GetChainTipsCommand {
     type Response = GetChainTipsCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getchaintips";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetChainTipsCommandResponse = r.result().unwrap();
-        response
+        let response: GetChainTipsCommandResponse = r.result()?;
+        Ok(response)
     }
 }

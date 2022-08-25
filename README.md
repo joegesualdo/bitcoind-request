@@ -17,7 +17,7 @@ If you're looking for additional information about the Bitcoin Network (i.e. tim
 > Add package to Cargo.toml file
 ```rust
 [dependencies]
-bitcoind-request = "0.1.11"
+bitcoind-request = "0.1.12"
 ```
 
 ## Usage:
@@ -47,10 +47,10 @@ println!("{}", blockchain_info.size_on_disk);
 
 // Compute statistics about the total number and rate of transactions in the chain.
 // Note: this calls "getchaintxstats" bitcoin core rpc command under the hood.
-let chain_tx_stats = GetChainTxStatsCommand::new()
+let maybe_chain_tx_stats = GetChainTxStatsCommand::new()
 	.set_n_blocks(2016)
 	.call(client);
-println!("{:#?}", chain_tx_stats);
+println!("{:#?}", maybe_chain_tx_stats.unwrap());
 
 ```
 ## Commands

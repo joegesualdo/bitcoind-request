@@ -95,11 +95,11 @@ pub struct GetNetworkInfoCommandResponse {
 
 impl CallableCommand for GetNetworkInfoCommand {
     type Response = GetNetworkInfoCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getnetworkinfo";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetNetworkInfoCommandResponse = r.result().unwrap();
-        response
+        let response: GetNetworkInfoCommandResponse = r.result()?;
+        Ok(response)
     }
 }

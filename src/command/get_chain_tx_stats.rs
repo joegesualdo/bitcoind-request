@@ -66,7 +66,7 @@ pub struct GetChainTxStatsCommandResponse {
 
 impl CallableCommand for GetChainTxStatsCommand {
     type Response = GetChainTxStatsCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getchaintxstats";
         let mut params: Vec<Box<RawValue>> = vec![];
         if let Some(n_blocks) = &self.n_blocks {
@@ -79,7 +79,7 @@ impl CallableCommand for GetChainTxStatsCommand {
             params.push(blockhash_arg_raw_value)
         }
         let r = request(client, command, params);
-        let response: GetChainTxStatsCommandResponse = r.result().unwrap();
-        response
+        let response: GetChainTxStatsCommandResponse = r.result()?;
+        Ok(response)
     }
 }

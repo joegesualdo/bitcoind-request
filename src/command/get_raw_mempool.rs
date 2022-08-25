@@ -143,7 +143,7 @@ impl GetRawMempoolCommand {
 }
 impl CallableCommand for GetRawMempoolCommand {
     type Response = GetRawMempoolCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         if self.verbose && self.mempool_sequence {
             panic!("RPC command 'getrawmempool' has invalid arguments of verbose=true & mempool_sequence=true. Verbose results cannot contain mempool sequence values.");
         }
@@ -154,7 +154,7 @@ impl CallableCommand for GetRawMempoolCommand {
         let command = "getrawmempool";
         let params = vec![verbose_arg_raw_value, mempool_sequence_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetRawMempoolCommandResponse = r.result().unwrap();
-        response
+        let response: GetRawMempoolCommandResponse = r.result()?;
+        Ok(response)
     }
 }

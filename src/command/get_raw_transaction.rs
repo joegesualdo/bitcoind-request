@@ -225,7 +225,7 @@ pub enum GetRawTransactionCommandResponse {
 //       conditional responses and map them to appropriate structs.
 impl CallableCommand for GetRawTransactionCommand {
     type Response = GetRawTransactionCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let txid_arg = &self.txid;
         let verbose_arg = &self.is_verbose;
         // TODO: Add blockhas param!
@@ -235,7 +235,7 @@ impl CallableCommand for GetRawTransactionCommand {
         let command = "getrawtransaction";
         let params = vec![txid_arg_raw_value, verbose_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetRawTransactionCommandResponse = r.result().unwrap();
-        response
+        let response: GetRawTransactionCommandResponse = r.result()?;
+        Ok(response)
     }
 }

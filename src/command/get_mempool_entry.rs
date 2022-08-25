@@ -96,7 +96,7 @@ pub struct GetMempoolEntryCommandResponse {
 
 impl CallableCommand for GetMempoolEntryCommand {
     type Response = GetMempoolEntryCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let txid_arg = &self.txid;
         // TODO: Add blockhas param!
         //let blockhash_arg = &self.blockhash.0;
@@ -104,7 +104,7 @@ impl CallableCommand for GetMempoolEntryCommand {
         let command = "getmempoolentry";
         let params = vec![txid_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetMempoolEntryCommandResponse = r.result().unwrap();
-        response
+        let response: GetMempoolEntryCommandResponse = r.result()?;
+        Ok(response)
     }
 }

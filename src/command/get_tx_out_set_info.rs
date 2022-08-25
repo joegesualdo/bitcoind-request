@@ -64,13 +64,13 @@ pub struct GetTxOutSetInfoCommandResponse {
 impl CallableCommand for GetTxOutSetInfoCommand {
     type Response = GetTxOutSetInfoCommandResponse;
     // TODO: This currently fails. Seems realted to this: https://github.com/bitcoin/bitcoin/issues/25724
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = GET_TX_OUT_SET_INFO_COMMAND;
         let hash_type_arg = &self.hash_type;
         let hash_type_arg_raw_value = to_raw_value(&hash_type_arg).unwrap();
         let params: Vec<Box<RawValue>> = vec![hash_type_arg_raw_value];
         let r = request(client, command, params);
-        let response: GetTxOutSetInfoCommandResponse = r.result().unwrap();
-        response
+        let response: GetTxOutSetInfoCommandResponse = r.result()?;
+        Ok(response)
     }
 }

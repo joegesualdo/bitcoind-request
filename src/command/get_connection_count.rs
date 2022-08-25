@@ -27,11 +27,11 @@ pub struct GetConnectionCountCommandResponse(pub u64);
 
 impl CallableCommand for GetConnectionCountCommand {
     type Response = GetConnectionCountCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getconnectioncount";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetConnectionCountCommandResponse = r.result().unwrap();
-        response
+        let response: GetConnectionCountCommandResponse = r.result()?;
+        Ok(response)
     }
 }

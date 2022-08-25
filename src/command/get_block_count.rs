@@ -28,11 +28,11 @@ pub struct GetBlockCountCommandResponse(pub u64);
 
 impl CallableCommand for GetBlockCountCommand {
     type Response = GetBlockCountCommandResponse;
-    fn call(&self, client: &Client) -> Self::Response {
+    fn call(&self, client: &Client) -> Result<Self::Response, jsonrpc::Error> {
         let command = "getblockcount";
         let params: Vec<Box<RawValue>> = vec![];
         let r = request(client, command, params);
-        let response: GetBlockCountCommandResponse = r.result().unwrap();
-        response
+        let response: GetBlockCountCommandResponse = r.result()?;
+        Ok(response)
     }
 }

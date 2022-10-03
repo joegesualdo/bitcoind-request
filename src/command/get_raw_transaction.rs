@@ -114,12 +114,12 @@ impl GetRawTransactionCommand {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct HexEncodedWitnessData(pub String);
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BitcoinAddress(pub String);
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
     pub asm: String, // "asm", NOT A HEX
@@ -133,14 +133,14 @@ pub struct ScriptPubKey {
     pub addresses: Option<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptSig {
     pub asm: String, // "asm", NOT A HEX
     pub hex: String, // "hex", hex
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 #[serde(untagged)]
 pub enum Vin {
@@ -148,7 +148,7 @@ pub enum Vin {
     NonCoinbase(NonCoinbaseVin),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CoinbaseVin {
     pub coinbase: String,
@@ -156,7 +156,7 @@ pub struct CoinbaseVin {
     pub txinwitness: Option<Vec<HexEncodedWitnessData>>, // hex-encoded witness data (if any)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NonCoinbaseVin {
     pub txid: String, // "hex" The transaction id
@@ -167,7 +167,7 @@ pub struct NonCoinbaseVin {
     pub txinwitness: Option<Vec<HexEncodedWitnessData>>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
     pub value: f64, // The value in BTC
@@ -179,7 +179,7 @@ pub struct Vout {
     // Deprecated
     pub addresses: Option<Vec<String>>,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub in_active_chain: Option<bool>,

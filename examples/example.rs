@@ -88,7 +88,7 @@ fn get_average_block_time(client: &Client) -> u64 {
     average_seconds_per_block
 }
 
-fn get_total_money_supply(client: &Client) -> u64 {
+fn get_total_money_supply(client: &Client) -> f64 {
     // calls to gettxoutsetinfo are erroring out due to this: https://github.com/apoelstra/rust-jsonrpc/issues/67
     let tx_out_set_info = GetTxOutSetInfoCommand::new().call(client);
     tx_out_set_info.unwrap().total_amount
@@ -125,27 +125,27 @@ fn main() {
     // let total_money_supply = get_total_money_supply(&client);
     // println!("TOTAL MONEY SUPPLY: {:#?}", total_money_supply);
 
-    let chain_size = get_chain_size(&client);
-    let chain_size_in_gbs = chain_size as f64 / 1_000_000_000.0;
-    println!("CHAIN SIZE: {:#?}GB", chain_size_in_gbs);
+    // let chain_size = get_chain_size(&client);
+    // let chain_size_in_gbs = chain_size as f64 / 1_000_000_000.0;
+    // println!("CHAIN SIZE: {:#?}GB", chain_size_in_gbs);
 
-    let hash_rate = GetNetworkHashPsCommand::new()
-        .set_n_blocks(
-            bitcoind_request::command::get_network_hash_ps::BlocksToIncludeArg::NBlocks(2016),
-        )
-        .set_height(bitcoind_request::command::get_network_hash_ps::HeightArg::Height(block_height))
-        .call(&client);
-    println!("hash_rate:{:#?}", hash_rate);
+    // let hash_rate = GetNetworkHashPsCommand::new()
+    //     .set_n_blocks(
+    //         bitcoind_request::command::get_network_hash_ps::BlocksToIncludeArg::NBlocks(2016),
+    //     )
+    //     .set_height(bitcoind_request::command::get_network_hash_ps::HeightArg::Height(block_height))
+    //     .call(&client);
+    // println!("hash_rate:{:#?}", hash_rate);
 
-    let connection_count = GetConnectionCountCommand::new().call(&client);
-    println!("connection_count:{:#?}", connection_count);
+    // let connection_count = GetConnectionCountCommand::new().call(&client);
+    // println!("connection_count:{:#?}", connection_count);
 
-    let node_addresses = GetNodeAddressesCommand::new()
-        .set_count(CountArg::AllAddresses)
-        .set_network(NetworkArg::All)
-        .call(&client);
-    println!("node addresses:{:#?}", node_addresses.unwrap().0);
-    let mut reachable_nodes = 0;
+    // let node_addresses = GetNodeAddressesCommand::new()
+    //     .set_count(CountArg::AllAddresses)
+    //     .set_network(NetworkArg::All)
+    //     .call(&client);
+    // println!("node addresses:{:#?}", node_addresses.unwrap().0);
+    // let mut reachable_nodes = 0;
     // node_addresses.unwrap().0.iter().for_each(|node| {
     //     let current_datetime = chrono::offset::Utc::now();
     //     let datetime_of_node = Utc.timestamp(node.time as i64, 0);
@@ -156,22 +156,22 @@ fn main() {
     //         reachable_nodes = reachable_nodes + 1;
     //     }
     // });
-    println!("reachable nodes count: {}", reachable_nodes);
+    // println!("reachable nodes count: {}", reachable_nodes);
 
-    let peer_info = GetPeerInfoCommand::new().call(&client);
-    println!("peerinfo:{:#?}", peer_info.unwrap().0.last());
+    // let peer_info = GetPeerInfoCommand::new().call(&client);
+    // println!("peerinfo:{:#?}", peer_info.unwrap().0.last());
 
-    let network_info = GetNetworkInfoCommand::new().call(&client);
-    println!("network info:{:#?}", network_info);
+    // let network_info = GetNetworkInfoCommand::new().call(&client);
+    // println!("network info:{:#?}", network_info);
 
-    let mempool_info = GetMempoolInfoCommand::new().call(&client);
-    println!("mempool info:{:#?}", mempool_info);
+    // let mempool_info = GetMempoolInfoCommand::new().call(&client);
+    // println!("mempool info:{:#?}", mempool_info);
 
-    let raw_mempool = GetRawMempoolCommand::new()
-        .set_verbose(true)
-        .set_mempool_sequence(false)
-        .call(&client);
-    println!("raw_mempool:{:#?}", raw_mempool);
+    // let raw_mempool = GetRawMempoolCommand::new()
+    //     .set_verbose(true)
+    //     .set_mempool_sequence(false)
+    //     .call(&client);
+    // println!("raw_mempool:{:#?}", raw_mempool);
 
     // what happens if the txid is no longer in the mempool
     //let mempool_entry = GetMempoolEntryCommand::new(
@@ -217,4 +217,7 @@ fn main() {
     // .verbose(true)
     // .call(&client);
     // println!("mempool entry:{:#?}", transaction);
+    let tx_out_set_info = GetTxOutSetInfoCommand::new().call(&client);
+    let x = tx_out_set_info.unwrap().txouts;
+    println!("{}", x);
 }

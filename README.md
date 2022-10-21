@@ -1,4 +1,5 @@
-# Bitcoind Request 
+# Bitcoind Request
+
 > Send RPC commands to a bitcoind server.
 
 ---
@@ -14,13 +15,16 @@ As this library only provides typesafety over raw RPC commands, functions will b
 If you're looking for additional information about the Bitcoin Network (i.e. time since last block, etc) , take a look at [bitcoin-node-query](https://github.com/joegesualdo/bitcoin-node-query), which provides additional functions to query bitcoin network data.
 
 ## Install
+
 > Add package to Cargo.toml file
+
 ```rust
 [dependencies]
-bitcoind-request = "0.1.14"
+bitcoind-request = "0.1.15"
 ```
 
 ## Usage:
+
 ```rust
 use bitcoind_request::{
     client::Client,
@@ -53,17 +57,22 @@ let maybe_chain_tx_stats = GetChainTxStatsCommand::new()
 println!("{:#?}", maybe_chain_tx_stats.unwrap());
 
 ```
+
 ## Commands
+
 List of all bitcoind commands can be found at [bitcoin.org](https://bitcoincore.org/en/doc/0.21.0/rpc/)
 
 They can also be found in the bitcoin-cli docs:
+
 ```zsh
 $ bitcoin-cli help
 ```
 
 ## Related
+
 - [bitcoin-node-query](https://github.com/joegesualdo/bitcoin-node-query) - Query Bitcoin Node for information
 - [bitcoin-terminal-dashboard](https://github.com/joegesualdo/bitcoin-terminal-dashboard) - Bitcoin Dashboard in the terminal
 
 ## License
+
 MIT © [Joe Gesualdo]()

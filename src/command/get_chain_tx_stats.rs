@@ -43,11 +43,11 @@ impl GetChainTxStatsCommand {
             blockhash: None,
         }
     }
-    pub fn set_n_blocks(&mut self, n_blocks: u64) -> &Self {
+    pub fn set_n_blocks(mut self, n_blocks: u64) -> Self {
         self.n_blocks = Some(n_blocks);
         self
     }
-    pub fn set_blockhash(&mut self, blockhash: Blockhash) -> &Self {
+    pub fn set_blockhash(mut self, blockhash: Blockhash) -> Self {
         self.blockhash = Some(blockhash);
         self
     }

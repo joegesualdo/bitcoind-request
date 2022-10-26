@@ -196,7 +196,7 @@ impl GetBlockCommand {
             verbosity: GetBlockCommandVerbosity::BlockObjectWithoutTransactionInformation,
         }
     }
-    pub fn verbosity(&mut self, verbosity: GetBlockCommandVerbosity) -> &Self {
+    pub fn verbosity(mut self, verbosity: GetBlockCommandVerbosity) -> Self {
         self.verbosity = verbosity;
         self
     }

@@ -20,7 +20,7 @@ If you're looking for additional information about the Bitcoin Network (i.e. tim
 
 ```rust
 [dependencies]
-bitcoind-request = "0.1.16"
+bitcoind-request = "0.1.17"
 ```
 
 ## Usage:

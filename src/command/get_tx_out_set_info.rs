@@ -40,7 +40,7 @@ impl GetTxOutSetInfoCommand {
         GetTxOutSetInfoCommand {}
     }
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GetTxOutSetInfoCommandResponse {
     pub height: u64,               // The current block height (index)
     pub bestblock: String,         // "hex" The hash of the block at the tip of the chain
